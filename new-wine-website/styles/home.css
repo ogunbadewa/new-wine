@@ -216,3 +216,49 @@
         object-fit: contain;
     }
 }
+
+/* Make Find Your Place section full-width like hero */
+.section.find-your-place-video {
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 6rem 0 !important;
+    width: 100vw !important;
+}
+
+/* Center the content inside */
+.section.find-your-place-video .section-title,
+.section.find-your-place-video .section-subtitle,
+.section.find-your-place-video .cards-grid {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+
+/* Mobile optimization for full-width section */
+@media (max-width: 768px) {
+    .section.find-your-place-video .section-title,
+    .section.find-your-place-video .section-subtitle,
+    .section.find-your-place-video .cards-grid {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+}
+
+
+/* Minimal Gradient Fade Divider */
+.gradient-fade-divider {
+    height: 20px;
+    background: linear-gradient(180deg, 
+        rgba(40, 40, 40, 0.6) 0%, 
+        rgba(40, 40, 40, 0.3) 60%, 
+        transparent 100%
+    );
+}
+
+@media (max-width: 768px) {
+    .gradient-fade-divider {
+        height: 20px;
+    }
+}
