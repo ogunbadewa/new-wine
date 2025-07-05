@@ -9,9 +9,16 @@ const CONFIG = {
 
 // Initialize common functionality when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
-    initializeNavigation();
-    initializeScrollEffects();
+    // Initialize animations first
     initializeAnimations();
+    initializeScrollEffects();
+    
+    // Remove no-js class after animations are set up
+    setTimeout(() => {
+        document.documentElement.classList.remove('no-js');
+    }, 50);
+
+    initializeNavigation();
     initializeSmoothScrolling();
 });
 
@@ -30,10 +37,7 @@ function initializeNavigation() {
         }
     });
     
-    // Set active nav link based on current page
     setActiveNavLink();
-    
-    // Mobile menu toggle (if needed in future)
     initializeMobileMenu();
 }
 
@@ -52,41 +56,14 @@ function setActiveNavLink() {
     });
 }
 
-// Mobile menu functionality
+// Mobile menu functionality (placeholder)
 function initializeMobileMenu() {
-    // Add mobile menu button if viewport is small
     const navContent = document.querySelector('.nav-content');
     if (!navContent) return;
-    
-    // Create mobile menu button
-    const mobileMenuBtn = document.createElement('button');
-    mobileMenuBtn.className = 'mobile-menu-btn';
-    mobileMenuBtn.innerHTML = '☰';
-    mobileMenuBtn.style.cssText = `
-        display: none;
-        background: none;
-        border: none;
-        font-size: 1.5rem;
-        color: var(--dark);
-        cursor: pointer;
-        @media (max-width: 768px) {
-            display: block;
-        }
-    `;
-    
-    // Toggle mobile menu
-    mobileMenuBtn.addEventListener('click', () => {
-        const navLinks = document.querySelector('.nav-links');
-        if (navLinks) {
-            navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
-        }
-    });
-    
-    // Add to navigation (commented out for now, can be enabled if needed)
-    // navContent.appendChild(mobileMenuBtn);
+
+    // Optional: future mobile menu button setup
 }
 
-// Smooth scrolling for anchor links
 // Smooth scrolling for anchor links
 function initializeSmoothScrolling() {
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -94,8 +71,6 @@ function initializeSmoothScrolling() {
             e.preventDefault();
 
             const targetId = this.getAttribute('href');
-
-            // Ignore invalid or empty '#' links
             if (!targetId || targetId === '#' || targetId.trim().length === 0) return;
 
             let targetElement;
@@ -119,11 +94,11 @@ function initializeSmoothScrolling() {
     });
 }
 
-// Scroll effects and animations
+// Scroll effects and animations - Fixed to prevent flash
 function initializeScrollEffects() {
-    // Intersection Observer for scroll animations
+    // Create intersection observer for smooth scroll animations
     const observerOptions = {
-        threshold: 0.1,
+        threshold: 0.15,
         rootMargin: '0px 0px -50px 0px'
     };
 
@@ -136,14 +111,14 @@ function initializeScrollEffects() {
     }, observerOptions);
 
     // Observe all animated elements
-    document.querySelectorAll('.animate-on-scroll').forEach(el => {
+    document.querySelectorAll('.animate-on-scroll, .section-title, .section-subtitle').forEach(el => {
         observer.observe(el);
     });
 }
 
-// Initialize animations
+// Initialize animations (adds animate-on-scroll if missing)
 function initializeAnimations() {
-    // Add animation classes to elements that need them
+    // Add animation classes to elements that should animate
     const animatedElements = document.querySelectorAll('.card, .section, .feature-card, .testimonial-card, .step-card, .expect-item, .faq-item, .event-item, .contact-card');
     
     animatedElements.forEach(el => {
@@ -151,11 +126,32 @@ function initializeAnimations() {
             el.classList.add('animate-on-scroll');
         }
     });
+
+    // Add animation classes to section titles and subtitles
+    document.querySelectorAll('.section-title, .section-subtitle').forEach(el => {
+        if (!el.classList.contains('animate-on-scroll')) {
+            el.classList.add('animate-on-scroll');
+        }
+    });
+
+    // For elements above the fold (like on homepage), make them visible immediately
+    const heroSection = document.querySelector('.hero-section');
+    if (heroSection) {
+        const heroNextSection = heroSection.nextElementSibling;
+        if (heroNextSection) {
+            const immediateElements = heroNextSection.querySelectorAll('.animate-on-scroll');
+            immediateElements.forEach(el => {
+                // Small delay to allow CSS to be applied
+                setTimeout(() => {
+                    el.classList.add('visible');
+                }, 100);
+            });
+        }
+    }
 }
 
 // Utility functions
 const Utils = {
-    // Format date for display
     formatDate: function(dateString) {
         if (!dateString) return 'N/A';
         const date = new Date(dateString);
@@ -166,7 +162,6 @@ const Utils = {
         });
     },
 
-    // Format date and time for display
     formatDateTime: function(dateString) {
         if (!dateString) return 'N/A';
         const date = new Date(dateString);
@@ -179,7 +174,6 @@ const Utils = {
         });
     },
 
-    // Show loading state on button
     setButtonLoading: function(button, isLoading, originalText = null) {
         if (isLoading) {
             if (!button.dataset.originalText) {
@@ -194,9 +188,7 @@ const Utils = {
         }
     },
 
-    // Show success/error messages
     showMessage: function(message, type = 'info', duration = 5000) {
-        // Create message element
         const messageEl = document.createElement('div');
         messageEl.className = `message message-${type}`;
         messageEl.textContent = message;
@@ -212,11 +204,8 @@ const Utils = {
             z-index: 10000;
             animation: slideIn 0.3s ease;
         `;
-        
-        // Add to page
         document.body.appendChild(messageEl);
-        
-        // Remove after duration
+
         setTimeout(() => {
             messageEl.style.animation = 'slideOut 0.3s ease';
             setTimeout(() => {
@@ -227,31 +216,26 @@ const Utils = {
         }, duration);
     },
 
-    // Validate email
     isValidEmail: function(email) {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email);
     },
 
-    // Validate phone number
     isValidPhone: function(phone) {
-        if (!phone) return true; // Phone is optional
+        if (!phone) return true;
         const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
-        return phoneRegex.test(phone.replace(/[\s\-\(\)]/g, ''));
+        return phone.replace(/[\s\-\(\)]/g, '').match(phoneRegex);
     },
 
-    // Sanitize input
     sanitizeInput: function(input) {
         if (typeof input !== 'string') return input;
         return input.trim().replace(/[<>]/g, '');
     },
 
-    // Get current timestamp
     getCurrentTimestamp: function() {
         return new Date().toISOString();
     },
 
-    // Debounce function
     debounce: function(func, wait) {
         let timeout;
         return function executedFunction(...args) {
@@ -268,23 +252,19 @@ const Utils = {
 // Error handling
 window.addEventListener('error', function(e) {
     console.error('JavaScript Error:', e.error);
-    
-    // Don't show error messages in production
     if (CONFIG.ENVIRONMENT === 'development') {
         Utils.showMessage('An error occurred. Check the console for details.', 'error');
     }
 });
 
-// Unhandled promise rejection handling
 window.addEventListener('unhandledrejection', function(e) {
     console.error('Unhandled Promise Rejection:', e.reason);
-    
     if (CONFIG.ENVIRONMENT === 'development') {
         Utils.showMessage('A network error occurred. Please try again.', 'error');
     }
 });
 
-// Export utilities for use in other files
+// Export utilities
 window.NewWineUtils = Utils;
 window.NewWineConfig = CONFIG;
 
@@ -292,25 +272,12 @@ window.NewWineConfig = CONFIG;
 const style = document.createElement('style');
 style.textContent = `
     @keyframes slideIn {
-        from {
-            transform: translateX(100%);
-            opacity: 0;
-        }
-        to {
-            transform: translateX(0);
-            opacity: 1;
-        }
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
     }
-    
     @keyframes slideOut {
-        from {
-            transform: translateX(0);
-            opacity: 1;
-        }
-        to {
-            transform: translateX(100%);
-            opacity: 0;
-        }
+        from { transform: translateX(0); opacity: 1; }
+        to { transform: translateX(100%); opacity: 0; }
     }
 `;
 document.head.appendChild(style);

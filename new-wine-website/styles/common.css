@@ -11,6 +11,8 @@
     --events-image: url('/media/images/events-background.jpg');
     --contact-video: url('/media/videos/contact-background.mp4');
     --contact-image: url('/media/images/contact-background.jpg');
+    --findyourplace-video: url('/media/videos/findyourplace-background.mp4');
+    --findyourplace-image: url('/media/images/findyourplace-background.jpg');
     
     /* Austin Stone Color Palette */
     --dark: #282828;
@@ -135,6 +137,7 @@ body {
     padding: 6rem 2rem;
     max-width: 1200px;
     margin: 0 auto;
+    background: #f9f9f9;
 }
 
 .section-title {
@@ -146,6 +149,15 @@ body {
     letter-spacing: -0.03em;
     font-family: 'proxima-nova', Arial, sans-serif;
     line-height: 1.1;
+    /* Animation styles */
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.section-title.visible {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .section-subtitle {
@@ -158,6 +170,16 @@ body {
     margin-right: auto;
     line-height: 1.6;
     font-weight: 400;
+    /* Animation styles */
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition-delay: 0.2s;
+}
+
+.section-subtitle.visible {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 /* Clean Cards - Austin Stone Style */
@@ -169,13 +191,28 @@ body {
 }
 
 .card {
-    background: var(--white);
+    background: #ffffff;
     padding: 3rem 2.5rem;
-    transition: all 0.4s ease;
     text-align: center;
-    border: 1px solid var(--lightest-gray);
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    color: #333333;
     position: relative;
     overflow: hidden;
+    /* Enhanced animation styles */
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transform-origin: center bottom;
+}
+
+.card.animate-on-scroll {
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+    transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.card.animate-on-scroll.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
 }
 
 .card::before {
@@ -191,14 +228,33 @@ body {
 }
 
 .card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+    transform: translateY(-12px) scale(1.02);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
 }
 
 .card:hover::before {
     transform: scaleX(1);
 }
 
+.card:hover h3 {
+    color: var(--brand-blue);
+    transition: color 0.3s ease;
+}
+
+/* Staggered card animations */
+.cards-grid .card:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.cards-grid .card:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.cards-grid .card:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+/* Card color schemes */
 .card:nth-child(1) .card-icon { color: var(--for-the-nations); }
 .card:nth-child(1)::before { background: var(--for-the-nations); }
 
@@ -212,20 +268,40 @@ body {
     font-size: 3.5rem;
     margin-bottom: 2rem;
     display: block;
-    transition: all 0.3s ease;
+    color: #333333;
+    /* Enhanced icon animations */
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    transform-origin: center;
+}
+
+.card:hover .card-icon {
+    transform: scale(1.1) rotate(-5deg);
+    filter: brightness(1.1);
+}
+
+/* Subtle pulse animation for icons on load */
+@keyframes iconPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.card.visible .card-icon {
+    animation: iconPulse 0.6s ease-out;
+    animation-delay: 0.3s;
 }
 
 .card h3 {
     font-size: 1.5rem;
     margin-bottom: 1.5rem;
-    color: var(--dark);
+    color: #333333;
     font-weight: 700;
     letter-spacing: -0.01em;
     font-family: 'proxima-nova', Arial, sans-serif;
 }
 
 .card p {
-    color: var(--body);
+    color: #333333;
     line-height: 1.7;
     font-size: 1rem;
     font-weight: 400;
@@ -326,7 +402,7 @@ body {
     font-size: 0.9rem;
 }
 
-/* Smooth animations */
+/* Smooth animations - Base styles */
 .animate-on-scroll {
     opacity: 0;
     transform: translateY(30px);
@@ -336,6 +412,32 @@ body {
 .animate-on-scroll.visible {
     opacity: 1;
     transform: translateY(0);
+}
+
+/* Fallback for no-js */
+.no-js .animate-on-scroll {
+    opacity: 1 !important;
+    transform: none !important;
+}
+
+/* Respect user's motion preferences */
+@media (prefers-reduced-motion: reduce) {
+    .card.animate-on-scroll,
+    .section-title,
+    .section-subtitle {
+        transition: opacity 0.3s ease;
+        transform: none !important;
+    }
+    
+    .card:hover {
+        transform: none;
+    }
+    
+    .card-icon,
+    .card:hover .card-icon {
+        transform: none !important;
+        animation: none !important;
+    }
 }
 
 /* Mobile Responsive */
@@ -360,5 +462,15 @@ body {
     .nav-cta {
         padding: 0.5rem 1rem;
         font-size: 0.8rem;
+    }
+    
+    /* Mobile optimized animations */
+    .card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    }
+    
+    .card:hover .card-icon {
+        transform: scale(1.05);
     }
 }
