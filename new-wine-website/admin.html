@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Wine - Admin Dashboard</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://use.typekit.net/lhk2eld.css" rel="stylesheet">
+    
+    <!-- Admin Styles -->
+    <link rel="stylesheet" href="styles/common.css">
+    <style>
+        /* ADMIN DASHBOARD STYLES */
+        :root {
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --info: #3b82f6;
+        }
+
+        body {
+            background: var(--lightest-gray);
+        }
+
+        /* Header */
+        .admin-header {
+            background: var(--white);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            padding: 1.5rem 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .admin-logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--dark);
+        }
+
+        .admin-nav {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .admin-nav a {
+            color: var(--body);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .admin-nav a:hover, .admin-nav a.active {
+            background: var(--brand-blue);
+            color: var(--white);
+        }
+
+        .logout-btn {
+            background: var(--error);
+            color: var(--white);
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #dc2626;
+        }
+
+        /* Main Content */
+        .admin-main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            margin-top: 100px;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .page-subtitle {
+            color: var(--body);
+            font-size: 1.1rem;
+            margin-bottom: 3rem;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border-left: 4px solid var(--brand-blue);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .stat-card:nth-child(2) { border-left-color: var(--for-the-nations); }
+        .stat-card:nth-child(3) { border-left-color: var(--counseling); }
+        .stat-card:nth-child(4) { border-left-color: var(--creative); }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--dark);
+            line-height: 1;
+        }
+
+        .stat-label {
+            color: var(--body);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .search-filter {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .search-input {
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--lightest-gray);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            min-width: 250px;
+            transition: border-color 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--brand-blue);
+        }
+
+        .filter-select {
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--lightest-gray);
+            border-radius: 8px;
+            background: var(--white);
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--brand-blue);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background: #0083b8;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: var(--white);
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        /* Data Table */
+        .table-container {
+            background: var(--white);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th {
+            background: var(--dark);
+            color: var(--white);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--lightest-gray);
+            vertical-align: top;
+        }
+
+        .table tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        .table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .type-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .type-registration {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .type-contact {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .action-btn {
+            padding: 0.5rem;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background 0.3s ease;
+            color: var(--body);
+        }
+
+        .action-btn:hover {
+            background: var(--lightest-gray);
+            color: var(--dark);
+        }
+
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: var(--body);
+        }
+
+        .loading-spinner {
+            border: 3px solid var(--lightest-gray);
+            border-top: 3px solid var(--brand-blue);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--body);
+        }
+
+        .empty-state h3 {
+            color: var(--dark);
+            margin-bottom: 1rem;
+        }
+
+        /* Login Form */
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--brand-blue) 0%, var(--institute) 100%);
+        }
+
+        .login-form {
+            background: var(--white);
+            padding: 3rem;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            margin: 2rem;
+        }
+
+        .login-title {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--dark);
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid var(--lightest-gray);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--brand-blue);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 1rem;
+            background: var(--brand-blue);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .login-btn:hover {
+            background: #0083b8;
+        }
+
+        .error-message {
+            color: var(--error);
+            font-size: 0.9rem;
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .admin-nav {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-filter {
+                flex-direction: column;
+            }
+
+            .search-input {
+                min-width: auto;
+            }
+
+            .table-container {
+                overflow-x: auto;
+            }
+
+            .table {
+                min-width: 600px;
+            }
+
+            .admin-main {
+                padding: 1rem;
+                margin-top: 160px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-container">
+        <form class="login-form" id="loginForm">
+            <h1 class="login-title">NEW WINE<br>Admin</h1>
+            <div class="form-group">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" id="username" class="form-input" required>
+            </div>
+            <div class="form-group">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" id="password" class="form-input" required>
+            </div>
+            <button type="submit" class="login-btn">Login</button>
+            <div id="loginError" class="error-message" style="display: none;"></div>
+        </form>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="adminDashboard" style="display: none;">
+        <!-- Header -->
+        <header class="admin-header">
+            <div class="header-content">
+                <div class="admin-logo">NEW WINE Admin</div>
+                <nav class="admin-nav">
+                    <a href="#" class="active" onclick="showSection('dashboard')">Dashboard</a>
+                    <a href="#" onclick="showSection('registrations')">Event Registrations</a>
+                    <a href="#" onclick="showSection('contacts')">Contact Forms</a>
+                    <button class="logout-btn" onclick="logout()">Logout</button>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <div class="page-title">Admin Dashboard</div>
+            <div class="page-subtitle">Manage registrations and contact form submissions</div>
+
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalRegistrations">0</div>
+                    <div class="stat-label">Total Registrations</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="immerseNightCount">0</div>
+                    <div class="stat-label">Immerse Night 2025</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="contactFormsCount">0</div>
+                    <div class="stat-label">Contact Forms</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="recentCount">0</div>
+                    <div class="stat-label">This Week</div>
+                </div>
+            </div>
+
+            <!-- Controls -->
+            <div class="controls">
+                <div class="search-filter">
+                    <input type="text" id="searchInput" class="search-input" placeholder="Search by name or email...">
+                    <select id="typeFilter" class="filter-select">
+                        <option value="all">All Types</option>
+                        <option value="registration">Event Registrations</option>
+                        <option value="contact">Contact Forms</option>
+                    </select>
+                    <select id="eventFilter" class="filter-select">
+                        <option value="all">All Events</option>
+                        <option value="IMMERSE NIGHT 2025">Immerse Night 2025</option>
+                        <option value="Summer Retreat 2025">Summer Retreat 2025</option>
+                        <option value="Worship Night">Worship Night</option>
+                    </select>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn btn-success" onclick="exportData()">
+                        📊 Export CSV
+                    </button>
+                    <button class="btn btn-primary" onclick="refreshData()">
+                        🔄 Refresh
+                    </button>
+                </div>
+            </div>
+
+            <!-- Data Table -->
+            <div class="table-container">
+                <div id="loadingState" class="loading">
+                    <div class="loading-spinner"></div>
+                    <p>Loading data...</p>
+                </div>
+
+                <table class="table" id="dataTable" style="display: none;">
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Event/Subject</th>
+                            <th>Message/Emergency Contact</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dataTableBody">
+                    </tbody>
+                </table>
+
+                <div id="emptyState" class="empty-state" style="display: none;">
+                    <h3>No data found</h3>
+                    <p>No registrations or contact forms match your search criteria.</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="js/common.js"></script>
+    <script src="js/api.js"></script>
+    <script>
+        // Global state
+        let currentData = [];
+        let isLoggedIn = false;
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuthStatus();
+            setupEventListeners();
+        });
+
+        function checkAuthStatus() {
+            if (window.NewWineAPI.isAdminLoggedIn()) {
+                showDashboard();
+                loadData();
+            } else {
+                showLogin();
+            }
+        }
+
+        function setupEventListeners() {
+            // Login form
+            document.getElementById('loginForm').addEventListener('submit', handleLogin);
+            
+            // Search and filters
+            document.getElementById('searchInput').addEventListener('input', filterData);
+            document.getElementById('typeFilter').addEventListener('change', filterData);
+            document.getElementById('eventFilter').addEventListener('change', filterData);
+        }
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('loginError');
+            const submitBtn = e.target.querySelector('.login-btn');
+            
+            window.NewWineUtils.setButtonLoading(submitBtn, true);
+            errorDiv.style.display = 'none';
+
+            try {
+                const result = await window.NewWineAPI.adminLogin({ username, password });
+                
+                if (result.success) {
+                    showDashboard();
+                    loadData();
+                } else {
+                    throw new Error(result.message || 'Invalid credentials');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                errorDiv.textContent = error.message || 'Login failed. Please try again.';
+                errorDiv.style.display = 'block';
+            } finally {
+                window.NewWineUtils.setButtonLoading(submitBtn, false);
+            }
+        }
+
+        function logout() {
+            window.NewWineAPI.adminLogout();
+        }
+
+        function showLogin() {
+            document.getElementById('loginScreen').style.display = 'flex';
+            document.getElementById('adminDashboard').style.display = 'none';
+        }
+
+        function showDashboard() {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('adminDashboard').style.display = 'block';
+            isLoggedIn = true;
+        }
+
+        async function loadData() {
+            showLoading();
+            
+            try {
+                // Load both registrations and contacts
+                const [registrations, contacts] = await Promise.all([
+                    window.NewWineAPI.getAllRegistrations(),
+                    window.NewWineAPI.getAllContacts()
+                ]);
+                
+                // Combine data with type field
+                currentData = [
+                    ...registrations.data.map(item => ({ ...item, type: 'registration' })),
+                    ...contacts.data.map(item => ({ ...item, type: 'contact' }))
+                ];
+                
+                updateStats();
+                displayData(currentData);
+                
+            } catch (error) {
+                console.error('Load data error:', error);
+                window.NewWineAPI.handleApiError(error, 'Failed to load data. Please try again.');
+                showError('Failed to load data. Please refresh the page.');
+            }
+        }
+
+        function showLoading() {
+            document.getElementById('loadingState').style.display = 'block';
+            document.getElementById('dataTable').style.display = 'none';
+            document.getElementById('emptyState').style.display = 'none';
+        }
+
+        function updateStats() {
+            const registrations = currentData.filter(item => item.type === 'registration');
+            const contacts = currentData.filter(item => item.type === 'contact');
+            const immerseNight = registrations.filter(item => item.eventName === 'IMMERSE NIGHT 2025');
+            
+            // Recent items (last 7 days)
+            const oneWeekAgo = new Date();
+            oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+            const recent = currentData.filter(item => 
+                new Date(item.registrationDate || item.submissionDate) > oneWeekAgo
+            );
+
+            document.getElementById('totalRegistrations').textContent = registrations.length;
+            document.getElementById('immerseNightCount').textContent = immerseNight.length;
+            document.getElementById('contactFormsCount').textContent = contacts.length;
+            document.getElementById('recentCount').textContent = recent.length;
+        }
+
+        function displayData(data) {
+            const tbody = document.getElementById('dataTableBody');
+            
+            if (data.length === 0) {
+                document.getElementById('loadingState').style.display = 'none';
+                document.getElementById('dataTable').style.display = 'none';
+                document.getElementById('emptyState').style.display = 'block';
+                return;
+            }
+
+            tbody.innerHTML = data.map(item => `
+                <tr>
+                    <td>
+                        <span class="type-badge type-${item.type}">
+                            ${item.type === 'registration' ? 'Event Registration' : 'Contact Form'}
+                        </span>
+                    </td>
+                    <td><strong>${item.fullName || item.name}</strong></td>
+                    <td>${item.email}</td>
+                    <td>${item.phone || 'N/A'}</td>
+                    <td>${item.eventName || item.subject || 'N/A'}</td>
+                    <td style="max-width: 200px; word-wrap: break-word;">
+                        ${item.emergencyContact || item.message || 'N/A'}
+                    </td>
+                    <td>${window.NewWineUtils.formatDate(item.registrationDate || item.submissionDate)}</td>
+                    <td>
+                        <button class="action-btn" onclick="deleteItem(${item.id}, '${item.type}')" title="Delete">
+                            🗑️
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('dataTable').style.display = 'table';
+            document.getElementById('emptyState').style.display = 'none';
+        }
+
+        function filterData() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const typeFilter = document.getElementById('typeFilter').value;
+            const eventFilter = document.getElementById('eventFilter').value;
+
+            let filtered = currentData;
+
+            // Search filter
+            if (searchTerm) {
+                filtered = filtered.filter(item => 
+                    (item.fullName || item.name).toLowerCase().includes(searchTerm) ||
+                    item.email.toLowerCase().includes(searchTerm)
+                );
+            }
+
+            // Type filter
+            if (typeFilter !== 'all') {
+                filtered = filtered.filter(item => item.type === typeFilter);
+            }
+
+            // Event filter
+            if (eventFilter !== 'all') {
+                filtered = filtered.filter(item => item.eventName === eventFilter);
+            }
+
+            displayData(filtered);
+        }
+
+        async function deleteItem(id, type) {
+            if (!confirm('Are you sure you want to delete this record?')) {
+                return;
+            }
+
+            try {
+                let result;
+                if (type === 'registration') {
+                    result = await window.NewWineAPI.deleteRegistration(id);
+                } else {
+                    result = await window.NewWineAPI.deleteContact(id);
+                }
+
+                if (result.success) {
+                    window.NewWineUtils.showMessage('Record deleted successfully', 'success');
+                    loadData(); // Refresh data
+                } else {
+                    throw new Error(result.message || 'Failed to delete');
+                }
+            } catch (error) {
+                console.error('Delete error:', error);
+                window.NewWineAPI.handleApiError(error, 'Failed to delete record. Please try again.');
+            }
+        }
+
+        async function exportData() {
+            try {
+                const blob = await window.NewWineAPI.exportDataToCsv();
+                const filename = `new-wine-data-${new Date().toISOString().split('T')[0]}.csv`;
+                window.NewWineAPI.downloadFile(blob, filename);
+                window.NewWineUtils.showMessage('Data exported successfully', 'success');
+            } catch (error) {
+                console.error('Export error:', error);
+                window.NewWineAPI.handleApiError(error, 'Failed to export data. Please try again.');
+            }
+        }
+
+        function refreshData() {
+            loadData();
+            window.NewWineUtils.showMessage('Data refreshed', 'success');
+        }
+
+        function showError(message) {
+            document.getElementById('loadingState').innerHTML = `
+                <p style="color: var(--error);">❌ ${message}</p>
+            `;
+        }
+
+        function showSection(section) {
+            // Update active nav
+            document.querySelectorAll('.admin-nav a').forEach(link => {
+                link.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // You can add different views here for different sections
+            console.log('Showing section:', section);
+        }
+    </script>
+</body>
+</html>

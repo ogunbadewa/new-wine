@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Events - New Wine</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://use.typekit.net/lhk2eld.css" rel="stylesheet">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="styles/common.css">
+    <link rel="stylesheet" href="styles/events.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav" id="navbar">
+        <div class="nav-content">
+            <a href="index.html" class="logo">NEW WINE</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="community.html">Community</a></li>
+                <li><a href="events.html" class="active">Events</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <a href="new-here.html" class="nav-cta">NEW HERE?</a>
+        </div>
+    </nav>
+
+    <!-- Events Hero Section -->
+    <section class="events-hero">
+        <div class="events-hero-content">
+            <h1 class="events-hero-title">Upcoming Events</h1>
+            <p class="events-hero-subtitle">Join us for life-changing experiences that will deepen your faith and strengthen your community connections.</p>
+        </div>
+    </section>
+
+    <!-- Featured Event - IMMERSE NIGHT -->
+    <section class="featured-event animate-on-scroll">
+        <div class="event-content">
+            <h2 class="event-title">Immerse Night 2025</h2>
+            <p class="event-details">An evening of intense prayer, intense worship, miracles, and praise</p>
+            <p class="event-date">August 10th, 2025 • 5:00 PM</p>
+            <div class="button-group">
+                <button class="btn-primary" onclick="openRegistrationModal('IMMERSE NIGHT 2025')">Register Now</button>
+                <button class="btn-secondary" onclick="toggleEventDetails('immerse-details')">Learn More</button>
+            </div>
+            
+            <!-- Event Details (Initially Hidden) -->
+            <div id="immerse-details" style="display: none; margin-top: 3rem; text-align: left; max-width: 600px; margin-left: auto; margin-right: auto;">
+                <h4 style="color: var(--white); margin-bottom: 1rem; font-size: 1.2rem;">What to Expect:</h4>
+                <ul style="color: var(--white-paragraph); line-height: 1.8; margin-left: 2rem;">
+                    <li>Powerful worship with live music</li>
+                    <li>Intense prayer and intercession</li>
+                    <li>Testimonies of God's miracles</li>
+                    <li>Community fellowship and connection</li>
+                    <li>Free dinner and refreshments</li>
+                </ul>
+                <p style="color: var(--white-paragraph); margin-top: 1rem; font-style: italic;">
+                    Come expecting God to move in powerful ways. This is more than an event - it's an encounter.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- All Events List -->
+    <section class="events-list">
+        <h2 class="section-title" style="margin-bottom: 3rem;">All Events</h2>
+        
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <!-- Weekly Events -->
+            <div class="event-item animate-on-scroll">
+                <div class="event-date-box">
+                    <div class="date-month">Every</div>
+                    <div class="date-day">SUN</div>
+                </div>
+                <div class="event-info">
+                    <h3>Sunday Services</h3>
+                    <div class="event-time">10:00 AM & 6:00 PM</div>
+                    <p class="event-description">Join us for worship, teaching, and community. Our morning service is all-ages, while our evening service is specifically designed for teens and young adults.</p>
+                </div>
+                <div class="event-actions">
+                    <a href="new-here.html" class="btn-primary btn-small">Plan Your Visit</a>
+                </div>
+            </div>
+
+            <!-- IMMERSE NIGHT -->
+            <div class="event-item animate-on-scroll">
+                <div class="event-date-box" style="background: var(--for-the-city);">
+                    <div class="date-month">Aug</div>
+                    <div class="date-day">10</div>
+                </div>
+                <div class="event-info">
+                    <h3>IMMERSE NIGHT 2025</h3>
+                    <div class="event-time">5:00 PM - 9:00 PM</div>
+                    <p class="event-description">An evening of intense prayer, intense worship, miracles, and praise. Come expecting God to move in powerful ways.</p>
+                </div>
+                <div class="event-actions">
+                    <button class="btn-primary btn-small" onclick="openRegistrationModal('IMMERSE NIGHT 2025')">Register</button>
+                    <button class="btn-secondary btn-small" onclick="shareEvent('IMMERSE NIGHT 2025')">Share</button>
+                </div>
+            </div>
+
+            <!-- Summer Retreat -->
+            <div class="event-item animate-on-scroll">
+                <div class="event-date-box" style="background: var(--for-the-nations);">
+                    <div class="date-month">Jul</div>
+                    <div class="date-day">15</div>
+                </div>
+                <div class="event-info">
+                    <h3>Summer Retreat 2025</h3>
+                    <div class="event-time">July 15-20, 2025</div>
+                    <p class="event-description">A transformative week away from distractions to focus on God, build relationships, and find renewal in beautiful Colorado mountains.</p>
+                </div>
+                <div class="event-actions">
+                    <button class="btn-primary btn-small" onclick="openRegistrationModal('Summer Retreat 2025')">Register</button>
+                    <a href="#" class="btn-secondary btn-small">Learn More</a>
+                </div>
+            </div>
+
+            <!-- Monthly Worship Nights -->
+            <div class="event-item animate-on-scroll">
+                <div class="event-date-box" style="background: var(--counseling);">
+                    <div class="date-month">1st</div>
+                    <div class="date-day">FRI</div>
+                </div>
+                <div class="event-info">
+                    <h3>Worship Nights</h3>
+                    <div class="event-time">First Friday of Every Month • 7:00 PM</div>
+                    <p class="event-description">Intimate evenings of worship and prayer where we come together to encounter God's presence and connect as a community.</p>
+                </div>
+                <div class="event-actions">
+                    <button class="btn-primary btn-small" onclick="openRegistrationModal('Worship Night')">Join Us</button>
+                </div>
+            </div>
+
+            <!-- Small Group Launch -->
+            <div class="event-item animate-on-scroll">
+                <div class="event-date-box" style="background: var(--institute);">
+                    <div class="date-month">Sep</div>
+                    <div class="date-day">05</div>
+                </div>
+                <div class="event-info">
+                    <h3>Small Groups Launch</h3>
+                    <div class="event-time">September 5th, 2025 • 7:00 PM</div>
+                    <p class="event-description">Join a small group and build lasting friendships while growing in faith. Groups for all ages and life stages.</p>
+                </div>
+                <div class="event-actions">
+                    <button class="btn-primary btn-small" onclick="openRegistrationModal('Small Groups')">Sign Up</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Registration Modal -->
+    <div id="registrationModal" class="registration-modal">
+        <form class="registration-form" id="eventRegistrationForm">
+            <h2 class="modal-title" id="modalEventTitle">Register for Event</h2>
+            <p class="modal-subtitle">Fill out the form below to register for this event. We'll send you a confirmation email.</p>
+            
+            <div class="form-group">
+                <label for="fullName" class="form-label">Full Name *</label>
+                <input type="text" id="fullName" name="fullName" class="form-input" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email" class="form-label">Email Address *</label>
+                <input type="email" id="email" name="email" class="form-input" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="phone" class="form-label">Phone Number</label>
+                <input type="tel" id="phone" name="phone" class="form-input">
+            </div>
+            
+            <div class="form-group">
+                <label for="emergencyContact" class="form-label">Emergency Contact</label>
+                <input type="text" id="emergencyContact" name="emergencyContact" class="form-input" placeholder="Name and phone number">
+            </div>
+            
+            <div class="form-group">
+                <label for="specialRequests" class="form-label">Special Requests or Dietary Restrictions</label>
+                <textarea id="specialRequests" name="specialRequests" class="form-input form-textarea" placeholder="Let us know if you have any special needs..."></textarea>
+            </div>
+            
+            <input type="hidden" id="eventName" name="eventName">
+            
+            <div class="modal-buttons">
+                <button type="button" class="btn-cancel" onclick="closeRegistrationModal()">Cancel</button>
+                <button type="submit" class="btn-submit" id="submitBtn">Register</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <h3>New Wine</h3>
+                    <p>A community where young hearts find home, grow in faith, and discover their God-given purpose together.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <p><a href="index.html">Home</a></p>
+                    <p><a href="community.html">Community</a></p>
+                    <p><a href="events.html">Events</a></p>
+                    <p><a href="contact.html">Contact</a></p>
+                </div>
+                <div class="footer-section">
+                    <h3>Connect</h3>
+                    <p>123 Faith Avenue<br>Englewood, CO 80110</p>
+                    <p>+1 (972) 940-2605</p>
+                    <p>info@newwinechurch.com</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 New Wine Church. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="js/common.js"></script>
+    <script src="js/api.js"></script>
+    <script>
+        // Event Registration Functions
+        function openRegistrationModal(eventName) {
+            document.getElementById('modalEventTitle').textContent = `Register for ${eventName}`;
+            document.getElementById('eventName').value = eventName;
+            document.getElementById('registrationModal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeRegistrationModal() {
+            document.getElementById('registrationModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+            document.getElementById('eventRegistrationForm').reset();
+        }
+
+        function toggleEventDetails(detailsId) {
+            const details = document.getElementById(detailsId);
+            if (details.style.display === 'none' || details.style.display === '') {
+                details.style.display = 'block';
+            } else {
+                details.style.display = 'none';
+            }
+        }
+
+        function shareEvent(eventName) {
+            if (navigator.share) {
+                navigator.share({
+                    title: `${eventName} - New Wine Church`,
+                    text: `Join us for ${eventName}!`,
+                    url: window.location.href
+                });
+            } else {
+                // Fallback for browsers that don't support Web Share API
+                const url = window.location.href;
+                navigator.clipboard.writeText(url).then(() => {
+                    alert('Event link copied to clipboard!');
+                });
+            }
+        }
+
+        // Handle registration form submission
+        document.getElementById('eventRegistrationForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const originalText = submitBtn.textContent;
+            
+            // Show loading state
+            submitBtn.textContent = 'Registering...';
+            submitBtn.disabled = true;
+            
+            // Get form data
+            const formData = new FormData(this);
+            const registrationData = {
+                fullName: formData.get('fullName'),
+                email: formData.get('email'),
+                phone: formData.get('phone') || null,
+                emergencyContact: formData.get('emergencyContact') || null,
+                eventName: formData.get('eventName'),
+                specialRequests: formData.get('specialRequests') || null,
+                registrationDate: new Date().toISOString()
+            };
+            
+            try {
+                const result = await registerForEvent(registrationData);
+                
+                if (result.success) {
+                    alert(`Successfully registered for ${registrationData.eventName}! Check your email for confirmation.`);
+                    closeRegistrationModal();
+                } else {
+                    throw new Error(result.message || 'Registration failed');
+                }
+            } catch (error) {
+                console.error('Registration error:', error);
+                alert('Sorry, there was an error with your registration. Please try again or call us directly.');
+            } finally {
+                // Reset button
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('registrationModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeRegistrationModal();
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeRegistrationModal();
+            }
+        });
+    </script>
+</body>
+</html>

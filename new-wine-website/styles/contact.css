@@ -1,0 +1,333 @@
+/* CONTACT PAGE SPECIFIC STYLES */
+
+/* Contact Hero Section */
+.contact-hero {
+    position: relative;
+    height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(rgba(40, 40, 40, 0.6), rgba(40, 40, 40, 0.4)), var(--contact-image);
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    overflow: hidden;
+    margin-top: 80px;
+}
+
+.contact-hero-content {
+    text-align: center;
+    color: var(--white);
+    max-width: 800px;
+    padding: 0 2rem;
+    z-index: 1;
+    position: relative;
+}
+
+.contact-hero-title {
+    font-size: 4rem;
+    font-weight: 800;
+    margin-bottom: 1.5rem;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+    font-family: 'proxima-nova', Arial, sans-serif;
+}
+
+.contact-hero-subtitle {
+    font-size: 1.3rem;
+    opacity: 0.95;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--white-paragraph);
+}
+
+/* Contact Section - Austin Stone Style */
+.contact-section {
+    background: var(--lightest-gray);
+    padding: 8rem 2rem;
+}
+
+.contact-content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: start;
+}
+
+/* Contact Info Cards */
+.contact-info {
+    display: grid;
+    gap: 2rem;
+}
+
+.contact-card {
+    background: var(--white);
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    text-align: center;
+    border-left: 4px solid var(--brand-blue);
+    transition: transform 0.3s ease;
+}
+
+.contact-card:hover {
+    transform: translateY(-5px);
+}
+
+.contact-card:nth-child(2) { border-left-color: var(--for-the-nations); }
+.contact-card:nth-child(3) { border-left-color: var(--counseling); }
+
+.contact-icon {
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+    color: var(--brand-blue);
+}
+
+.contact-card:nth-child(2) .contact-icon { color: var(--for-the-nations); }
+.contact-card:nth-child(3) .contact-icon { color: var(--counseling); }
+
+.contact-card h3 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--dark);
+}
+
+.contact-card p {
+    color: var(--body);
+    line-height: 1.6;
+    margin-bottom: 0.5rem;
+}
+
+.contact-card strong {
+    color: var(--dark);
+}
+
+/* Contact Form */
+.contact-form {
+    background: var(--white);
+    padding: 3rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.form-title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--dark);
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.form-subtitle {
+    color: var(--body);
+    text-align: center;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+.form-label {
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+    color: var(--dark);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-family: 'proxima-nova', Arial, sans-serif;
+}
+
+.form-input, .form-textarea {
+    padding: 1.25rem;
+    border: 2px solid var(--lightest-gray);
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    font-family: 'proxima-nova', Arial, sans-serif;
+    background: var(--white);
+    color: var(--dark);
+}
+
+.form-input:focus, .form-textarea:focus {
+    outline: none;
+    border-color: var(--brand-blue);
+    box-shadow: 0 0 0 3px rgba(0, 163, 225, 0.1);
+}
+
+.form-textarea {
+    resize: vertical;
+    min-height: 140px;
+}
+
+.submit-btn {
+    background: var(--dark);
+    color: var(--white);
+    padding: 1.25rem 2rem;
+    border: 2px solid var(--dark);
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    margin-top: 1rem;
+    font-family: 'proxima-nova', Arial, sans-serif;
+}
+
+.submit-btn:hover {
+    background: var(--brand-blue);
+    border-color: var(--brand-blue);
+    transform: translateY(-2px);
+}
+
+.submit-btn:disabled {
+    background: var(--light-slate-grey);
+    border-color: var(--light-slate-grey);
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Success/Error Messages */
+.form-message {
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    font-weight: 500;
+    text-align: center;
+}
+
+.form-message.success {
+    background: #d1fae5;
+    color: #065f46;
+    border: 1px solid #10b981;
+}
+
+.form-message.error {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #ef4444;
+}
+
+/* Service Times Section */
+.service-times {
+    background: var(--dark);
+    color: var(--white);
+    padding: 6rem 2rem;
+    text-align: center;
+}
+
+.service-times h2 {
+    color: var(--white);
+    margin-bottom: 3rem;
+}
+
+.times-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.time-card {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 2rem;
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.time-card h3 {
+    color: var(--white);
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+}
+
+.time-card .time {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--brand-blue);
+    margin-bottom: 0.5rem;
+}
+
+.time-card .description {
+    color: var(--white-paragraph);
+    line-height: 1.5;
+}
+
+/* Map Section */
+.map-section {
+    padding: 0;
+    position: relative;
+}
+
+.map-container {
+    width: 100%;
+    height: 400px;
+    background: var(--lightest-gray);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--body);
+    font-size: 1.1rem;
+}
+
+/* Mobile Responsive for Contact */
+@media (max-width: 768px) {
+    .contact-hero {
+        height: 50vh;
+        margin-top: 70px;
+    }
+
+    .contact-hero-title {
+        font-size: 2.5rem;
+    }
+
+    .contact-grid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+    }
+
+    .contact-form {
+        padding: 2rem;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .contact-section {
+        padding: 4rem 1rem;
+    }
+
+    .service-times {
+        padding: 4rem 1rem;
+    }
+
+    .times-grid {
+        grid-template-columns: 1fr;
+    }
+}

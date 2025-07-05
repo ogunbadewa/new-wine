@@ -1,0 +1,370 @@
+/* NEW HERE PAGE SPECIFIC STYLES */
+
+/* New Here Hero Section */
+.new-here-hero {
+    position: relative;
+    height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(rgba(40, 40, 40, 0.6), rgba(40, 40, 40, 0.4)), var(--hero-image);
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    overflow: hidden;
+    margin-top: 80px;
+}
+
+.new-here-hero-content {
+    text-align: center;
+    color: var(--white);
+    max-width: 900px;
+    padding: 0 2rem;
+    z-index: 1;
+    position: relative;
+}
+
+.new-here-hero-title {
+    font-size: 4.5rem;
+    font-weight: 800;
+    margin-bottom: 1.5rem;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+    font-family: 'proxima-nova', Arial, sans-serif;
+}
+
+.new-here-hero-subtitle {
+    font-size: 1.4rem;
+    margin-bottom: 3rem;
+    opacity: 0.95;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--white-paragraph);
+}
+
+.hero-cta-buttons {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* Welcome Steps */
+.welcome-steps {
+    padding: 6rem 2rem;
+    background: var(--white);
+}
+
+.steps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 3rem;
+    max-width: 1200px;
+    margin: 4rem auto 0;
+}
+
+.step-card {
+    text-align: center;
+    padding: 3rem 2rem;
+    background: var(--lightest-gray);
+    border-radius: 12px;
+    position: relative;
+    transition: transform 0.3s ease;
+}
+
+.step-card:hover {
+    transform: translateY(-5px);
+}
+
+.step-number {
+    position: absolute;
+    top: -1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 3rem;
+    height: 3rem;
+    background: var(--brand-blue);
+    color: var(--white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.2rem;
+}
+
+.step-card:nth-child(2) .step-number { background: var(--for-the-nations); }
+.step-card:nth-child(3) .step-number { background: var(--counseling); }
+
+.step-icon {
+    font-size: 3rem;
+    margin: 2rem 0 1.5rem;
+    color: var(--brand-blue);
+}
+
+.step-card:nth-child(2) .step-icon { color: var(--for-the-nations); }
+.step-card:nth-child(3) .step-icon { color: var(--counseling); }
+
+.step-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--dark);
+}
+
+.step-description {
+    color: var(--body);
+    line-height: 1.6;
+}
+
+/* What to Expect */
+.what-to-expect {
+    background: var(--lightest-gray);
+    padding: 6rem 2rem;
+}
+
+.expect-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    max-width: 1000px;
+    margin: 4rem auto 0;
+}
+
+.expect-item {
+    background: var(--white);
+    padding: 2.5rem;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border-top: 4px solid var(--brand-blue);
+}
+
+.expect-item:nth-child(2) { border-top-color: var(--for-the-nations); }
+.expect-item:nth-child(3) { border-top-color: var(--counseling); }
+.expect-item:nth-child(4) { border-top-color: var(--creative); }
+
+.expect-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: var(--brand-blue);
+}
+
+.expect-item:nth-child(2) .expect-icon { color: var(--for-the-nations); }
+.expect-item:nth-child(3) .expect-icon { color: var(--counseling); }
+.expect-item:nth-child(4) .expect-icon { color: var(--creative); }
+
+.expect-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--dark);
+}
+
+.expect-description {
+    color: var(--body);
+    line-height: 1.5;
+    font-size: 0.95rem;
+}
+
+/* FAQ Section */
+.faq-section {
+    padding: 6rem 2rem;
+    background: var(--white);
+}
+
+.faq-container {
+    max-width: 800px;
+    margin: 4rem auto 0;
+}
+
+.faq-item {
+    border-bottom: 1px solid var(--lightest-gray);
+    margin-bottom: 1rem;
+}
+
+.faq-question {
+    background: none;
+    border: none;
+    width: 100%;
+    text-align: left;
+    padding: 1.5rem 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--dark);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: color 0.3s ease;
+}
+
+.faq-question:hover {
+    color: var(--brand-blue);
+}
+
+.faq-question::after {
+    content: '+';
+    font-size: 1.5rem;
+    font-weight: 300;
+    transition: transform 0.3s ease;
+}
+
+.faq-question.active::after {
+    transform: rotate(45deg);
+}
+
+.faq-answer {
+    padding: 0 0 1.5rem 0;
+    color: var(--body);
+    line-height: 1.6;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.faq-answer.active {
+    max-height: 200px;
+}
+
+/* Call to Action Section */
+.new-here-cta {
+    background: var(--dark);
+    color: var(--white);
+    padding: 6rem 2rem;
+    text-align: center;
+}
+
+.cta-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.cta-title {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 1.5rem;
+    color: var(--white);
+}
+
+.cta-subtitle {
+    font-size: 1.2rem;
+    margin-bottom: 3rem;
+    color: var(--white-paragraph);
+    line-height: 1.6;
+}
+
+.cta-buttons {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* Contact Form Quick */
+.quick-contact {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 3rem;
+    border-radius: 12px;
+    margin-top: 3rem;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.quick-contact h3 {
+    color: var(--white);
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+}
+
+.quick-contact p {
+    color: var(--white-paragraph);
+    margin-bottom: 2rem;
+}
+
+.quick-form {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 1rem;
+}
+
+.quick-input {
+    padding: 1rem;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--white);
+    font-size: 1rem;
+}
+
+.quick-input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.quick-input:focus {
+    outline: none;
+    border-color: var(--brand-blue);
+}
+
+.quick-btn {
+    background: var(--brand-blue);
+    color: var(--white);
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    white-space: nowrap;
+}
+
+.quick-btn:hover {
+    background: #0083b8;
+}
+
+/* Mobile Responsive for New Here */
+@media (max-width: 768px) {
+    .new-here-hero {
+        height: 60vh;
+        margin-top: 70px;
+    }
+
+    .new-here-hero-title {
+        font-size: 3rem;
+    }
+
+    .hero-cta-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .steps-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .expect-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+
+    .cta-title {
+        font-size: 2rem;
+    }
+
+    .cta-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .quick-form {
+        grid-template-columns: 1fr;
+    }
+
+    .welcome-steps,
+    .what-to-expect,
+    .faq-section,
+    .new-here-cta {
+        padding: 4rem 1rem;
+    }
+}

@@ -1,0 +1,335 @@
+/* EVENTS PAGE SPECIFIC STYLES */
+
+/* Events Hero Section */
+.events-hero {
+    position: relative;
+    height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(rgba(40, 40, 40, 0.6), rgba(40, 40, 40, 0.4)), var(--events-image);
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    overflow: hidden;
+    margin-top: 80px;
+}
+
+.events-hero-content {
+    text-align: center;
+    color: var(--white);
+    max-width: 800px;
+    padding: 0 2rem;
+    z-index: 1;
+    position: relative;
+}
+
+.events-hero-title {
+    font-size: 4rem;
+    font-weight: 800;
+    margin-bottom: 1.5rem;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+    font-family: 'proxima-nova', Arial, sans-serif;
+}
+
+.events-hero-subtitle {
+    font-size: 1.3rem;
+    opacity: 0.95;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--white-paragraph);
+}
+
+/* Featured Event - Sophisticated Style */
+.featured-event {
+    background: linear-gradient(135deg, var(--dark) 0%, var(--dark-medium) 100%);
+    color: var(--white);
+    padding: 6rem 2rem;
+    text-align: center;
+    margin: 6rem 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.featured-event::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="dots" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="%23ffffff" opacity="0.1"/></pattern></defs><rect width="100%" height="100%" fill="url(%23dots)"/></svg>');
+    opacity: 0.3;
+}
+
+.event-content {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.event-title {
+    font-size: 4.5rem;
+    margin-bottom: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+    font-family: 'proxima-nova', Arial, sans-serif;
+    line-height: 0.9;
+}
+
+.event-details {
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+    opacity: 0.9;
+    line-height: 1.5;
+    font-weight: 400;
+    color: var(--white-paragraph);
+}
+
+.event-date {
+    font-size: 1.1rem;
+    margin-bottom: 3rem;
+    opacity: 0.8;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.button-group {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* Event Registration Modal */
+.registration-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.registration-form {
+    background: var(--white);
+    padding: 3rem;
+    border-radius: 12px;
+    max-width: 500px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--dark);
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.modal-subtitle {
+    color: var(--body);
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--dark);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 1rem;
+    border: 2px solid var(--lightest-gray);
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--brand-blue);
+}
+
+.form-textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+    margin-top: 2rem;
+}
+
+.btn-cancel {
+    background: var(--lightest-gray);
+    color: var(--dark);
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.btn-cancel:hover {
+    background: #e5e7eb;
+}
+
+.btn-submit {
+    background: var(--brand-blue);
+    color: var(--white);
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    flex: 1;
+}
+
+.btn-submit:hover {
+    background: #0083b8;
+}
+
+.btn-submit:disabled {
+    background: var(--light-slate-grey);
+    cursor: not-allowed;
+}
+
+/* Events Calendar/List */
+.events-list {
+    background: var(--lightest-gray);
+    padding: 6rem 2rem;
+}
+
+.event-item {
+    background: var(--white);
+    margin-bottom: 2rem;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 2rem;
+    align-items: center;
+    transition: transform 0.3s ease;
+}
+
+.event-item:hover {
+    transform: translateY(-2px);
+}
+
+.event-date-box {
+    text-align: center;
+    padding: 1rem;
+    background: var(--brand-blue);
+    color: var(--white);
+    border-radius: 8px;
+    min-width: 100px;
+}
+
+.date-month {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.9;
+}
+
+.date-day {
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.event-info h3 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 0.5rem;
+}
+
+.event-time {
+    color: var(--body);
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.event-description {
+    color: var(--body);
+    line-height: 1.5;
+}
+
+.event-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.btn-small {
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+    white-space: nowrap;
+}
+
+/* Mobile Responsive for Events */
+@media (max-width: 768px) {
+    .events-hero {
+        height: 50vh;
+        margin-top: 70px;
+    }
+
+    .events-hero-title {
+        font-size: 2.5rem;
+    }
+
+    .event-title {
+        font-size: 2.5rem;
+    }
+
+    .button-group {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .event-item {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .event-actions {
+        flex-direction: row;
+        justify-content: center;
+    }
+
+    .registration-form {
+        padding: 2rem;
+    }
+
+    .modal-buttons {
+        flex-direction: column;
+    }
+}
