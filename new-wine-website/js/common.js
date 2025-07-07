@@ -7,15 +7,17 @@ const CONFIG = {
     ENVIRONMENT: 'development' // 'development' or 'production'
 };
 
-// Slideshow functionality
+// Slideshow functionality - UPDATED FOR DYNAMIC IMAGE LOADING
 let slideIndex = 1;
 let slideInterval;
 let isPlaying = true;
-const slideImages = [
-    '/media/images/IMMERSE_2024/IM_2024_1.jpg',
-    '/media/images/IMMERSE_2024/IM_2024_2.jpg'
-    // Add more images as needed
-];
+let totalSlides = 0;
+
+// Make these variables globally accessible
+window.slideIndex = slideIndex;
+window.totalSlides = totalSlides;
+window.isPlaying = isPlaying;
+window.slideInterval = slideInterval;
 
 // Initialize common functionality when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
@@ -87,64 +89,172 @@ function updateBimonthlyServiceDisplay() {
     return nextService;
 }
 
-// Slideshow initialization and management
-function initializeSlideshow() {
-    loadAdditionalImages();
-    showSlide(slideIndex);
-    autoSlide();
-}
-
-function loadAdditionalImages() {
-    // This function would typically load images dynamically
-    // For now, we'll work with the predefined images
+// FIXED: Enhanced image loading function with better error handling
+async function loadImmerseImages() {
+    console.log('🔍 Starting to load IMMERSE 2024 images...');
+    
     const slidesTrack = document.getElementById('slidesTrack');
     const indicators = document.getElementById('slideshowIndicators');
     
-    if (!slidesTrack || !indicators) return;
+    if (!slidesTrack || !indicators) {
+        console.warn('⚠️ Slideshow elements not found');
+        return 0;
+    }
 
-    // Clear existing slides except the first two
-    const existingSlides = slidesTrack.querySelectorAll('.slide');
-    const existingIndicators = indicators.querySelectorAll('.indicator');
+    // Clear existing content
+    slidesTrack.innerHTML = '';
+    indicators.innerHTML = '';
 
-    // Add more images if available (this would be dynamic in a real implementation)
-    const additionalImages = [
-        // Add more image paths here as they become available
-        // '/media/images/IMMERSE_2024/IM_2024_3.jpg',
-        // '/media/images/IMMERSE_2024/IM_2024_4.jpg',
-    ];
+    let imageIndex = 1;
+    let loadedImages = 0;
+    const maxImages = 50; // Reasonable limit to prevent infinite loop
 
-    additionalImages.forEach((imageSrc, index) => {
+    // Function to check if image exists
+    function imageExists(imageSrc) {
+        return new Promise((resolve) => {
+            const img = new Image();
+            
+            // Set a timeout to prevent hanging
+            const timeout = setTimeout(() => {
+                resolve(false);
+            }, 5000); // 5 second timeout
+            
+            img.onload = () => {
+                clearTimeout(timeout);
+                resolve(true);
+            };
+            
+            img.onerror = () => {
+                clearTimeout(timeout);
+                resolve(false);
+            };
+            
+            img.src = imageSrc;
+        });
+    }
+
+    // Keep trying to load images until we can't find any more
+    while (imageIndex <= maxImages) {
+        const imageSrc = `media/images/IMMERSE_2024/IM_2024_${imageIndex}.jpg`;
+        console.log(`🔍 Checking for image: ${imageSrc}`);
+        
+        const exists = await imageExists(imageSrc);
+        
+        if (!exists) {
+            console.log(`❌ Image not found: ${imageSrc}`);
+            break; // No more images found
+        }
+
+        console.log(`✅ Found image: ${imageSrc}`);
+
         // Create slide
         const slide = document.createElement('div');
         slide.className = 'slide';
-        slide.innerHTML = `<img src="${imageSrc}" alt="IMMERSE 2024 - Moment ${index + 3}" loading="lazy">`;
+        if (imageIndex === 1) {
+            slide.classList.add('active');
+        }
+        slide.innerHTML = `<img src="${imageSrc}" alt="IMMERSE 2024 - Moment ${imageIndex}" loading="lazy">`;
         slidesTrack.appendChild(slide);
 
         // Create indicator
         const indicator = document.createElement('span');
         indicator.className = 'indicator';
-        indicator.onclick = () => currentSlide(existingSlides.length + index + 1);
+        if (imageIndex === 1) {
+            indicator.classList.add('active');
+        }
+        indicator.onclick = () => currentSlide(imageIndex);
         indicators.appendChild(indicator);
-    });
+
+        loadedImages++;
+        imageIndex++;
+    }
+
+    // Update global variables
+    window.totalSlides = loadedImages;
+    totalSlides = loadedImages;
+    
+    console.log(`📸 Successfully loaded ${loadedImages} IMMERSE 2024 images`);
+    
+    if (totalSlides === 0) {
+        console.warn('⚠️ No images found - showing fallback');
+        // Fallback: show a message
+        slidesTrack.innerHTML = `
+            <div class="slide active" style="display: flex; align-items: center; justify-content: center; background: #f0f0f0; color: #666; font-size: 1.2rem; padding: 4rem; text-align: center; border-radius: 10px;">
+                <div>
+                    <h3>IMMERSE 2024 Memories</h3>
+                    <p>Images will appear here when added to:<br><code>media/images/IMMERSE_2024/</code></p>
+                    <p style="margin-top: 1rem; font-size: 0.9rem; opacity: 0.7;">Name your images: IM_2024_1.jpg, IM_2024_2.jpg, etc.</p>
+                </div>
+            </div>
+        `;
+        indicators.innerHTML = '<span class="indicator active"></span>';
+        window.totalSlides = 1;
+        totalSlides = 1;
+    }
+
+    return loadedImages;
 }
 
-function changeSlide(direction) {
-    const slides = document.querySelectorAll('.slide');
-    slideIndex += direction;
+// FIXED: Slideshow initialization and management
+async function initializeSlideshow() {
+    console.log('🎬 Initializing slideshow...');
     
-    if (slideIndex > slides.length) {
+    // Load images first
+    const imageCount = await loadImmerseImages();
+    
+    if (imageCount > 0) {
+        // Initialize slideshow state
+        window.slideIndex = 1;
         slideIndex = 1;
-    }
-    if (slideIndex < 1) {
-        slideIndex = slides.length;
+        
+        // Show first slide
+        showSlide(1);
+        
+        // Start auto-rotation if we have multiple slides
+        if (imageCount > 1) {
+            autoSlide();
+        }
+        
+        console.log(`✅ Slideshow initialized with ${imageCount} images`);
+    } else {
+        console.log('ℹ️ Slideshow initialized with fallback content');
     }
     
-    showSlide(slideIndex);
+    return imageCount;
+}
+
+// Make updateBimonthlyServiceDisplay globally accessible
+window.updateBimonthlyServiceDisplay = updateBimonthlyServiceDisplay;
+
+// FIXED: Slideshow control functions
+function changeSlide(direction) {
+    if (window.totalSlides <= 1) {
+        console.log('⚠️ Cannot change slide - only 1 slide available');
+        return;
+    }
+    
+    window.slideIndex += direction;
+    
+    if (window.slideIndex > window.totalSlides) {
+        window.slideIndex = 1;
+    }
+    if (window.slideIndex < 1) {
+        window.slideIndex = window.totalSlides;
+    }
+    
+    console.log(`🎬 Changed to slide ${window.slideIndex} of ${window.totalSlides}`);
+    showSlide(window.slideIndex);
 }
 
 function currentSlide(index) {
-    slideIndex = index;
-    showSlide(slideIndex);
+    if (index < 1 || index > window.totalSlides) {
+        console.warn(`⚠️ Invalid slide index: ${index}`);
+        return;
+    }
+    
+    window.slideIndex = index;
+    console.log(`🎬 Jumped to slide ${index}`);
+    showSlide(window.slideIndex);
     resetAutoSlide();
 }
 
@@ -152,7 +262,10 @@ function showSlide(index) {
     const slides = document.querySelectorAll('.slide');
     const indicators = document.querySelectorAll('.indicator');
     
-    if (slides.length === 0) return;
+    if (slides.length === 0) {
+        console.warn('⚠️ No slides found to show');
+        return;
+    }
     
     // Hide all slides
     slides.forEach((slide, i) => {
@@ -165,6 +278,7 @@ function showSlide(index) {
     // Show current slide
     if (slides[index - 1]) {
         slides[index - 1].classList.add('active');
+        console.log(`👁️ Showing slide ${index}`);
     }
     if (indicators[index - 1]) {
         indicators[index - 1].classList.add('active');
@@ -172,37 +286,50 @@ function showSlide(index) {
 }
 
 function autoSlide() {
-    if (!isPlaying) return;
+    if (!window.isPlaying || window.totalSlides <= 1) {
+        console.log('⏸️ Auto-slide disabled (not playing or single slide)');
+        return;
+    }
     
-    slideInterval = setInterval(() => {
-        const slides = document.querySelectorAll('.slide');
-        if (slides.length > 1) {
-            changeSlide(1);
-        }
+    // Clear any existing interval
+    if (window.slideInterval) {
+        clearInterval(window.slideInterval);
+    }
+    
+    window.slideInterval = setInterval(() => {
+        changeSlide(1);
     }, 4000); // Change slide every 4 seconds
+    
+    console.log('▶️ Auto-slide started');
 }
 
 function toggleSlideshow() {
     const playPauseBtn = document.getElementById('playPauseBtn');
     const playPauseText = document.getElementById('playPauseText');
     
-    if (!playPauseBtn || !playPauseText) return;
+    if (!playPauseBtn || !playPauseText) {
+        console.warn('⚠️ Play/pause button not found');
+        return;
+    }
     
-    if (isPlaying) {
-        clearInterval(slideInterval);
-        isPlaying = false;
+    if (window.isPlaying) {
+        clearInterval(window.slideInterval);
+        window.isPlaying = false;
         playPauseText.textContent = 'Play';
+        console.log('⏸️ Slideshow paused');
     } else {
         autoSlide();
-        isPlaying = true;
+        window.isPlaying = true;
         playPauseText.textContent = 'Pause';
+        console.log('▶️ Slideshow resumed');
     }
 }
 
 function resetAutoSlide() {
-    if (isPlaying) {
-        clearInterval(slideInterval);
+    if (window.isPlaying && window.totalSlides > 1) {
+        clearInterval(window.slideInterval);
         autoSlide();
+        console.log('🔄 Auto-slide reset');
     }
 }
 
@@ -450,7 +577,10 @@ const EventUtils = {
             location: '13509 Lyndon B Johnson Fwy, Garland, TX 75041',
             phone: '(972) 940-2605'
         };
-    }
+    },
+    
+    // Load IMMERSE images dynamically
+    loadImmerseImages: loadImmerseImages
 };
 
 // Utility functions
@@ -575,6 +705,16 @@ const Utils = {
         };
         
         return new IntersectionObserver(callback, { ...defaultOptions, ...options });
+    },
+
+    // Image existence checker utility
+    imageExists: function(imageSrc) {
+        return new Promise((resolve) => {
+            const img = new Image();
+            img.onload = () => resolve(true);
+            img.onerror = () => resolve(false);
+            img.src = imageSrc;
+        });
     }
 };
 
@@ -646,7 +786,7 @@ window.addEventListener('unhandledrejection', function(e) {
     }
 });
 
-// Export utilities and functions
+// FIXED: Export utilities and functions with proper slideshow methods
 window.NewWineUtils = Utils;
 window.NewWineConfig = CONFIG;
 window.NewWineEventUtils = EventUtils;
@@ -654,7 +794,11 @@ window.NewWineSlideshow = {
     changeSlide,
     currentSlide,
     toggleSlideshow,
-    initializeSlideshow
+    initializeSlideshow,
+    loadImmerseImages,
+    showSlide,
+    autoSlide,
+    resetAutoSlide
 };
 
 // Add CSS animations
@@ -715,6 +859,40 @@ style.textContent = `
     img.error {
         opacity: 0.5;
         filter: grayscale(100%);
+    }
+    
+    /* Enhanced slideshow loading styles */
+    .slideshow-loading {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        height: 400px;
+        background: linear-gradient(135deg, #f0f0f0 0%, #e0e0e0 100%);
+        border-radius: 10px;
+        color: #666;
+        font-size: 1.1rem;
+        font-weight: 600;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .slideshow-loading::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(90deg, 
+            transparent, 
+            rgba(255,255,255,0.6), 
+            transparent);
+        animation: shimmer 2s infinite;
+    }
+    
+    @keyframes shimmer {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(100%); }
     }
 `;
 document.head.appendChild(style);

@@ -29,7 +29,12 @@
 
     <!-- IMMERSE 2025 Hero Section -->
     <section class="immerse-hero">
-        <div class="immerse-hero-overlay"></div>
+        <div class="immerse-hero-overlay">
+            <video autoplay muted loop playsinline>
+                <source src="media/videos/events_background.mp4" type="video/mp4">
+                <!-- Fallback for browsers that don't support video -->
+            </video>
+        </div>
         <div class="immerse-hero-content">
             <div class="immerse-hero-text">
                 <span class="immerse-date">August 10th, 2025</span>
@@ -99,28 +104,24 @@
             <div class="slideshow-container">
                 <div class="slideshow-wrapper">
                     <div class="slides-track" id="slidesTrack">
-                        <div class="slide active">
-                            <img src="/media/images/IMMERSE_2024/IM_2024_1.jpg" alt="IMMERSE 2024 - Worship" loading="lazy">
+                        <!-- Loading message while images load -->
+                        <div class="slide active slideshow-loading">
+                            Loading IMMERSE 2024 memories...
                         </div>
-                        <div class="slide">
-                            <img src="/media/images/IMMERSE_2024/IM_2024_2.jpg" alt="IMMERSE 2024 - Prayer" loading="lazy">
-                        </div>
-                        <!-- Additional slides will be loaded dynamically -->
                     </div>
                     
                     <div class="slideshow-controls">
-                        <button class="slide-btn prev" onclick="changeSlide(-1)" aria-label="Previous slide">‹</button>
-                        <button class="slide-btn next" onclick="changeSlide(1)" aria-label="Next slide">›</button>
+                        <button class="slide-btn prev" onclick="window.NewWineSlideshow && window.NewWineSlideshow.changeSlide && window.NewWineSlideshow.changeSlide(-1)" aria-label="Previous slide">‹</button>
+                        <button class="slide-btn next" onclick="window.NewWineSlideshow && window.NewWineSlideshow.changeSlide && window.NewWineSlideshow.changeSlide(1)" aria-label="Next slide">›</button>
                     </div>
                     
                     <div class="slideshow-indicators" id="slideshowIndicators">
-                        <span class="indicator active" onclick="currentSlide(1)"></span>
-                        <span class="indicator" onclick="currentSlide(2)"></span>
+                        <!-- Indicators will be loaded dynamically -->
                     </div>
                 </div>
                 
                 <div class="slideshow-info">
-                    <button class="btn-play-pause" id="playPauseBtn" onclick="toggleSlideshow()">
+                    <button class="btn-play-pause" id="playPauseBtn" onclick="window.NewWineSlideshow && window.NewWineSlideshow.toggleSlideshow && window.NewWineSlideshow.toggleSlideshow()">
                         <span id="playPauseText">Pause</span>
                     </button>
                     <p class="slideshow-description">Automatic slideshow • Click to pause</p>
@@ -252,48 +253,63 @@
     <script src="js/common.js"></script>
     <script src="js/api.js"></script>
     <script>
-        // Calculate next bi-monthly service date - UPDATED FOR TIMEZONE ACCURACY
-        function calculateNextBimonthlyService() {
-            // Create the last service date in Central Time (Dallas, TX)
-            // July 6th, 2025 at 5:30 PM Central Time
-            const lastServiceDate = new Date('2025-07-06T17:30:00');
+        // FIXED: Proper slideshow initialization
+        async function initializeEventsSlideshow() {
+            console.log('🎬 Initializing Events Slideshow...');
             
-            // Get current date/time in Central Time
-            const now = new Date();
-            const currentCentral = new Date(now.toLocaleString("en-US", {timeZone: "America/Chicago"}));
-            
-            // Start with the last service date
-            let nextService = new Date(lastServiceDate);
-            
-            // Keep adding 14 days (2 weeks) until we find the next future date
-            while (nextService <= currentCentral) {
-                nextService.setDate(nextService.getDate() + 14);
+            try {
+                // Use the loadImmerseImages function from common.js
+                if (window.NewWineSlideshow && window.NewWineSlideshow.loadImmerseImages) {
+                    const imageCount = await window.NewWineSlideshow.loadImmerseImages();
+                    console.log(`📸 Loaded ${imageCount} IMMERSE 2024 images`);
+                    
+                    if (imageCount > 0) {
+                        // Initialize slideshow controls
+                        window.slideIndex = 1;
+                        window.totalSlides = imageCount;
+                        
+                        // Start the slideshow
+                        if (window.NewWineSlideshow.initializeSlideshow) {
+                            window.NewWineSlideshow.initializeSlideshow();
+                        }
+                        
+                        console.log('✅ Slideshow initialized successfully!');
+                    } else {
+                        console.warn('⚠️ No images found for slideshow');
+                        // Show fallback message
+                        const slidesTrack = document.getElementById('slidesTrack');
+                        if (slidesTrack) {
+                            slidesTrack.innerHTML = `
+                                <div class="slide active" style="display: flex; align-items: center; justify-content: center; background: #f0f0f0; color: #666; font-size: 1.2rem; padding: 4rem; text-align: center; border-radius: 10px;">
+                                    <div>
+                                        <h3>IMMERSE 2024 Memories</h3>
+                                        <p>Images will appear here when added to:<br><code>media/images/IMMERSE_2024/</code></p>
+                                        <p style="margin-top: 1rem; font-size: 0.9rem; opacity: 0.7;">Name your images: IM_2024_1.jpg, IM_2024_2.jpg, etc.</p>
+                                    </div>
+                                </div>
+                            `;
+                        }
+                    }
+                } else {
+                    console.error('❌ Slideshow functions not available from common.js');
+                }
+            } catch (error) {
+                console.error('❌ Error initializing slideshow:', error);
+                
+                // Show error message
+                const slidesTrack = document.getElementById('slidesTrack');
+                if (slidesTrack) {
+                    slidesTrack.innerHTML = `
+                        <div class="slide active" style="display: flex; align-items: center; justify-content: center; background: #fee; color: #c53030; font-size: 1.1rem; padding: 4rem; text-align: center; border-radius: 10px;">
+                            <div>
+                                <h3>Slideshow Error</h3>
+                                <p>Unable to load IMMERSE 2024 images.</p>
+                                <p style="margin-top: 1rem; font-size: 0.9rem;">Check the browser console for details.</p>
+                            </div>
+                        </div>
+                    `;
+                }
             }
-            
-            return nextService;
-        }
-        
-        // Update bi-monthly service display
-        function updateBimonthlyServiceDisplay() {
-            const nextService = calculateNextBimonthlyService();
-            const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
-                              'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-            const fullMonthNames = ['January', 'February', 'March', 'April', 'May', 'June',
-                                  'July', 'August', 'September', 'October', 'November', 'December'];
-            
-            // Get the date components in Central Time
-            const centralDate = new Date(nextService.toLocaleString("en-US", {timeZone: "America/Chicago"}));
-            const month = centralDate.getMonth();
-            const day = centralDate.getDate();
-            const year = centralDate.getFullYear();
-            
-            // Update date box
-            document.getElementById('bimonthlyMonth').textContent = monthNames[month];
-            document.getElementById('bimonthlyDay').textContent = day;
-            
-            // Update date/time display
-            const dateTimeText = `Next Service: ${fullMonthNames[month]} ${day}, ${year} • 5:30 PM`;
-            document.getElementById('bimonthlyDateTime').textContent = dateTimeText;
         }
 
         // Event Registration Functions
@@ -364,13 +380,21 @@
             };
             
             try {
-                const result = await registerForEvent(registrationData);
-                
-                if (result.success) {
-                    alert(`Successfully registered for ${registrationData.eventName}! Check your email for confirmation.`);
-                    closeRegistrationModal();
+                // If registerForEvent function exists (from api.js), use it
+                if (typeof registerForEvent === 'function') {
+                    const result = await registerForEvent(registrationData);
+                    
+                    if (result.success) {
+                        alert(`Successfully registered for ${registrationData.eventName}! Check your email for confirmation.`);
+                        closeRegistrationModal();
+                    } else {
+                        throw new Error(result.message || 'Registration failed');
+                    }
                 } else {
-                    throw new Error(result.message || 'Registration failed');
+                    // Fallback: just show success message (for development)
+                    console.log('Registration data:', registrationData);
+                    alert(`Registration submitted for ${registrationData.eventName}! (Development mode)`);
+                    closeRegistrationModal();
                 }
             } catch (error) {
                 console.error('Registration error:', error);
@@ -398,8 +422,18 @@
 
         // Initialize when page loads
         document.addEventListener('DOMContentLoaded', function() {
-            updateBimonthlyServiceDisplay();
-            initializeSlideshow();
+            console.log('🚀 Events page DOM loaded');
+            
+            // Update bi-monthly service display
+            if (window.updateBimonthlyServiceDisplay) {
+                window.updateBimonthlyServiceDisplay();
+                console.log('📅 Bi-monthly service dates updated');
+            }
+            
+            // Initialize slideshow with proper error handling
+            setTimeout(() => {
+                initializeEventsSlideshow();
+            }, 500); // Small delay to ensure common.js is fully loaded
         });
     </script>
 </body>

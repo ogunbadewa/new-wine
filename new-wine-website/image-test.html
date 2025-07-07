@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Loading Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: #f5f5f5;
+        }
+        
+        .test-section {
+            background: white;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .test-image {
+            max-width: 300px;
+            height: 200px;
+            object-fit: cover;
+            border: 2px solid #ddd;
+            margin: 1rem;
+            border-radius: 8px;
+        }
+        
+        .error {
+            color: #dc3545;
+            background: #f8d7da;
+            padding: 1rem;
+            border-radius: 4px;
+            margin: 1rem 0;
+        }
+        
+        .success {
+            color: #155724;
+            background: #d4edda;
+            padding: 1rem;
+            border-radius: 4px;
+            margin: 1rem 0;
+        }
+        
+        .path-info {
+            background: #e9ecef;
+            padding: 1rem;
+            border-radius: 4px;
+            margin: 1rem 0;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+        
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 0.5rem;
+        }
+        
+        button:hover {
+            background: #0056b3;
+        }
+        
+        #results {
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 New Wine Events Image Loading Diagnostic</h1>
+    
+    <div class="test-section">
+        <h2>📁 Expected Folder Structure</h2>
+        <div class="path-info">
+            Your project folder should look like this:<br><br>
+            📁 new-wine-website/<br>
+            ├── 📄 events.html<br>
+            ├── 📁 media/<br>
+            │   ├── 📁 images/<br>
+            │   │   └── 📁 IMMERSE_2024/<br>
+            │   │       ├── 🖼️ IM_2024_1.jpg<br>
+            │   │       ├── 🖼️ IM_2024_2.jpg<br>
+            │   │       ├── 🖼️ IM_2024_3.jpg<br>
+            │   │       └── 🖼️ IM_2024_4.jpg<br>
+            │   └── 📁 videos/<br>
+            │       └── 🎬 events_background.mp4<br>
+            └── 📁 js/<br>
+                └── 📄 common.js
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h2>🧪 Manual Image Tests</h2>
+        <p>These should show your IMMERSE 2024 images if the paths are correct:</p>
+        
+        <div>
+            <h3>Image 1:</h3>
+            <img src="media/images/IMMERSE_2024/IM_2024_1.jpg" 
+                 alt="IMMERSE 2024 - Image 1" 
+                 class="test-image"
+                 onload="reportSuccess(this, 1)"
+                 onerror="reportError(this, 1)">
+        </div>
+        
+        <div>
+            <h3>Image 2:</h3>
+            <img src="media/images/IMMERSE_2024/IM_2024_2.jpg" 
+                 alt="IMMERSE 2024 - Image 2" 
+                 class="test-image"
+                 onload="reportSuccess(this, 2)"
+                 onerror="reportError(this, 2)">
+        </div>
+        
+        <div>
+            <h3>Image 3:</h3>
+            <img src="media/images/IMMERSE_2024/IM_2024_3.jpg" 
+                 alt="IMMERSE 2024 - Image 3" 
+                 class="test-image"
+                 onload="reportSuccess(this, 3)"
+                 onerror="reportError(this, 3)">
+        </div>
+        
+        <div>
+            <h3>Image 4:</h3>
+            <img src="media/images/IMMERSE_2024/IM_2024_4.jpg" 
+                 alt="IMMERSE 2024 - Image 4" 
+                 class="test-image"
+                 onload="reportSuccess(this, 4)"
+                 onerror="reportError(this, 4)">
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h2>🤖 Automatic Detection Test</h2>
+        <button onclick="testAutoDetection()">Test Automatic Image Detection</button>
+        <div id="results"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>🎬 Video Test</h2>
+        <p>Testing the events background video:</p>
+        <video width="400" height="225" controls>
+            <source src="media/videos/events_background.mp4" type="video/mp4">
+            <div class="error">Your browser doesn't support the video tag or the video file is not found.</div>
+        </video>
+    </div>
+    
+    <div class="test-section">
+        <h2>💡 Troubleshooting Tips</h2>
+        <ul>
+            <li><strong>File paths:</strong> Make sure your images are in the correct folder relative to this HTML file</li>
+            <li><strong>File names:</strong> Check that your images are named exactly: IM_2024_1.jpg, IM_2024_2.jpg, etc.</li>
+            <li><strong>Case sensitivity:</strong> On some systems, file names are case-sensitive</li>
+            <li><strong>Web server:</strong> Make sure you're running a local web server (not just opening the HTML file)</li>
+            <li><strong>Browser cache:</strong> Try refreshing with Ctrl+F5 (or Cmd+Shift+R on Mac)</li>
+        </ul>
+    </div>
+
+    <script>
+        let loadResults = {};
+        
+        function reportSuccess(img, imageNum) {
+            loadResults[imageNum] = true;
+            const div = img.parentElement;
+            if (!div.querySelector('.success')) {
+                const successMsg = document.createElement('div');
+                successMsg.className = 'success';
+                successMsg.textContent = `✅ Image ${imageNum} loaded successfully!`;
+                div.appendChild(successMsg);
+            }
+        }
+        
+        function reportError(img, imageNum) {
+            loadResults[imageNum] = false;
+            const div = img.parentElement;
+            if (!div.querySelector('.error')) {
+                const errorMsg = document.createElement('div');
+                errorMsg.className = 'error';
+                errorMsg.innerHTML = `❌ Image ${imageNum} failed to load.<br>Expected path: media/images/IMMERSE_2024/IM_2024_${imageNum}.jpg`;
+                div.appendChild(errorMsg);
+            }
+        }
+        
+        async function testAutoDetection() {
+            const results = document.getElementById('results');
+            results.innerHTML = '<p>🔍 Testing automatic image detection...</p>';
+            
+            let foundImages = [];
+            let imageIndex = 1;
+            
+            // Function to check if image exists
+            function imageExists(imageSrc) {
+                return new Promise((resolve) => {
+                    const img = new Image();
+                    img.onload = () => resolve(true);
+                    img.onerror = () => resolve(false);
+                    img.src = imageSrc;
+                });
+            }
+            
+            // Test images 1-10
+            for (let i = 1; i <= 10; i++) {
+                const imageSrc = `media/images/IMMERSE_2024/IM_2024_${i}.jpg`;
+                const exists = await imageExists(imageSrc);
+                
+                if (exists) {
+                    foundImages.push(i);
+                }
+            }
+            
+            if (foundImages.length > 0) {
+                results.innerHTML = `
+                    <div class="success">
+                        ✅ Found ${foundImages.length} images: IM_2024_${foundImages.join('.jpg, IM_2024_')}.jpg
+                    </div>
+                `;
+            } else {
+                results.innerHTML = `
+                    <div class="error">
+                        ❌ No images found in media/images/IMMERSE_2024/<br>
+                        Please check that your images are in the correct folder and named properly.
+                    </div>
+                `;
+            }
+        }
+        
+        // Auto-run detection after page loads
+        window.addEventListener('load', () => {
+            setTimeout(testAutoDetection, 2000);
+        });
+    </script>
+</body>
+</html>
