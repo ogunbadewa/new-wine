@@ -7,6 +7,16 @@ const CONFIG = {
     ENVIRONMENT: 'development' // 'development' or 'production'
 };
 
+// Slideshow functionality
+let slideIndex = 1;
+let slideInterval;
+let isPlaying = true;
+const slideImages = [
+    '/media/images/IMMERSE_2024/IM_2024_1.jpg',
+    '/media/images/IMMERSE_2024/IM_2024_2.jpg'
+    // Add more images as needed
+];
+
 // Initialize common functionality when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize animations first
@@ -21,6 +31,202 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeNavigation();
     initializeSmoothScrolling();
 });
+
+// Bi-Monthly Service Date Calculation - UPDATED FOR TIMEZONE ACCURACY
+function calculateNextBimonthlyService() {
+    // Create the last service date in Central Time (Dallas, TX)
+    // July 6th, 2025 at 5:30 PM Central Time
+    const lastServiceDate = new Date('2025-07-06T17:30:00');
+    
+    // Get current date/time in Central Time
+    const now = new Date();
+    const currentCentral = new Date(now.toLocaleString("en-US", {timeZone: "America/Chicago"}));
+    
+    // Start with the last service date
+    let nextService = new Date(lastServiceDate);
+    
+    // Keep adding 14 days (2 weeks) until we find the next future date
+    while (nextService <= currentCentral) {
+        nextService.setDate(nextService.getDate() + 14);
+    }
+    
+    return nextService;
+}
+
+// Update bi-monthly service display - UPDATED FOR TIMEZONE ACCURACY
+function updateBimonthlyServiceDisplay() {
+    const nextService = calculateNextBimonthlyService();
+    
+    // Format date using Central Time
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const fullMonthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                          'July', 'August', 'September', 'October', 'November', 'December'];
+    
+    // Get the date components in Central Time
+    const centralDate = new Date(nextService.toLocaleString("en-US", {timeZone: "America/Chicago"}));
+    const month = centralDate.getMonth();
+    const day = centralDate.getDate();
+    const year = centralDate.getFullYear();
+    
+    // Update date box elements if they exist
+    const monthEl = document.getElementById('bimonthlyMonth');
+    const dayEl = document.getElementById('bimonthlyDay');
+    const dateTimeEl = document.getElementById('bimonthlyDateTime');
+    
+    if (monthEl && dayEl) {
+        monthEl.textContent = monthNames[month];
+        dayEl.textContent = day;
+    }
+    
+    if (dateTimeEl) {
+        const dateTimeText = `Next Service: ${fullMonthNames[month]} ${day}, ${year} • 5:30 PM`;
+        dateTimeEl.textContent = dateTimeText;
+    }
+
+    return nextService;
+}
+
+// Slideshow initialization and management
+function initializeSlideshow() {
+    loadAdditionalImages();
+    showSlide(slideIndex);
+    autoSlide();
+}
+
+function loadAdditionalImages() {
+    // This function would typically load images dynamically
+    // For now, we'll work with the predefined images
+    const slidesTrack = document.getElementById('slidesTrack');
+    const indicators = document.getElementById('slideshowIndicators');
+    
+    if (!slidesTrack || !indicators) return;
+
+    // Clear existing slides except the first two
+    const existingSlides = slidesTrack.querySelectorAll('.slide');
+    const existingIndicators = indicators.querySelectorAll('.indicator');
+
+    // Add more images if available (this would be dynamic in a real implementation)
+    const additionalImages = [
+        // Add more image paths here as they become available
+        // '/media/images/IMMERSE_2024/IM_2024_3.jpg',
+        // '/media/images/IMMERSE_2024/IM_2024_4.jpg',
+    ];
+
+    additionalImages.forEach((imageSrc, index) => {
+        // Create slide
+        const slide = document.createElement('div');
+        slide.className = 'slide';
+        slide.innerHTML = `<img src="${imageSrc}" alt="IMMERSE 2024 - Moment ${index + 3}" loading="lazy">`;
+        slidesTrack.appendChild(slide);
+
+        // Create indicator
+        const indicator = document.createElement('span');
+        indicator.className = 'indicator';
+        indicator.onclick = () => currentSlide(existingSlides.length + index + 1);
+        indicators.appendChild(indicator);
+    });
+}
+
+function changeSlide(direction) {
+    const slides = document.querySelectorAll('.slide');
+    slideIndex += direction;
+    
+    if (slideIndex > slides.length) {
+        slideIndex = 1;
+    }
+    if (slideIndex < 1) {
+        slideIndex = slides.length;
+    }
+    
+    showSlide(slideIndex);
+}
+
+function currentSlide(index) {
+    slideIndex = index;
+    showSlide(slideIndex);
+    resetAutoSlide();
+}
+
+function showSlide(index) {
+    const slides = document.querySelectorAll('.slide');
+    const indicators = document.querySelectorAll('.indicator');
+    
+    if (slides.length === 0) return;
+    
+    // Hide all slides
+    slides.forEach((slide, i) => {
+        slide.classList.remove('active');
+        if (indicators[i]) {
+            indicators[i].classList.remove('active');
+        }
+    });
+    
+    // Show current slide
+    if (slides[index - 1]) {
+        slides[index - 1].classList.add('active');
+    }
+    if (indicators[index - 1]) {
+        indicators[index - 1].classList.add('active');
+    }
+}
+
+function autoSlide() {
+    if (!isPlaying) return;
+    
+    slideInterval = setInterval(() => {
+        const slides = document.querySelectorAll('.slide');
+        if (slides.length > 1) {
+            changeSlide(1);
+        }
+    }, 4000); // Change slide every 4 seconds
+}
+
+function toggleSlideshow() {
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const playPauseText = document.getElementById('playPauseText');
+    
+    if (!playPauseBtn || !playPauseText) return;
+    
+    if (isPlaying) {
+        clearInterval(slideInterval);
+        isPlaying = false;
+        playPauseText.textContent = 'Play';
+    } else {
+        autoSlide();
+        isPlaying = true;
+        playPauseText.textContent = 'Pause';
+    }
+}
+
+function resetAutoSlide() {
+    if (isPlaying) {
+        clearInterval(slideInterval);
+        autoSlide();
+    }
+}
+
+// Enhanced image loading with error handling
+function loadImageWithFallback(img, src, fallbackSrc = '/media/images/placeholder.jpg') {
+    return new Promise((resolve, reject) => {
+        const image = new Image();
+        image.onload = () => {
+            img.src = src;
+            resolve();
+        };
+        image.onerror = () => {
+            console.warn(`Failed to load image: ${src}`);
+            if (fallbackSrc && fallbackSrc !== src) {
+                loadImageWithFallback(img, fallbackSrc, null)
+                    .then(resolve)
+                    .catch(reject);
+            } else {
+                reject(new Error(`Failed to load image: ${src}`));
+            }
+        };
+        image.src = src;
+    });
+}
 
 // Navigation functionality
 function initializeNavigation() {
@@ -106,6 +312,13 @@ function initializeScrollEffects() {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('visible');
+                
+                // Add staggered animation for cards
+                if (entry.target.classList.contains('card')) {
+                    const cards = entry.target.parentElement.querySelectorAll('.card');
+                    const cardIndex = Array.from(cards).indexOf(entry.target);
+                    entry.target.style.animationDelay = `${cardIndex * 0.1}s`;
+                }
             }
         });
     }, observerOptions);
@@ -150,6 +363,96 @@ function initializeAnimations() {
     }
 }
 
+// Enhanced IMMERSE event interactions
+function initializeImmerseInteractions() {
+    // Add smooth scrolling to IMMERSE details
+    const learnMoreBtn = document.querySelector('button[onclick*="immerse-details"]');
+    if (learnMoreBtn) {
+        learnMoreBtn.addEventListener('click', function() {
+            setTimeout(() => {
+                const detailsSection = document.getElementById('immerse-details');
+                if (detailsSection && detailsSection.style.display === 'block') {
+                    detailsSection.scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'start' 
+                    });
+                }
+            }, 100);
+        });
+    }
+    
+    // Add click tracking for registration buttons
+    const registrationButtons = document.querySelectorAll('button[onclick*="IMMERSE"], button[onclick*="Bi-Monthly"]');
+    registrationButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            // Track registration button clicks if analytics are implemented
+            if (typeof gtag !== 'undefined') {
+                const eventName = btn.onclick.toString().includes('IMMERSE') ? 'IMMERSE 2025' : 'Bi-Monthly Service';
+                gtag('event', 'click', {
+                    event_category: 'Event Registration',
+                    event_label: eventName
+                });
+            }
+        });
+    });
+}
+
+// Enhanced form validation
+function validateEventRegistrationForm(formData) {
+    const errors = [];
+    
+    if (!formData.get('fullName') || formData.get('fullName').trim().length < 2) {
+        errors.push('Please enter a valid full name');
+    }
+    
+    if (!Utils.isValidEmail(formData.get('email'))) {
+        errors.push('Please enter a valid email address');
+    }
+    
+    const phone = formData.get('phone');
+    if (phone && !Utils.isValidPhone(phone)) {
+        errors.push('Please enter a valid phone number');
+    }
+    
+    return errors;
+}
+
+// Event-specific utilities
+const EventUtils = {
+    // Get next bi-monthly service info
+    getNextBimonthlyService: function() {
+        return calculateNextBimonthlyService();
+    },
+    
+    // Check if a date is a bi-monthly service date
+    isBimonthlyServiceDate: function(date) {
+        const lastServiceDate = new Date('2025-07-06T17:30:00');
+        const targetDate = new Date(date);
+        const diffTime = targetDate.getTime() - lastServiceDate.getTime();
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        
+        // Check if the difference is a multiple of 14 days
+        return diffDays % 14 === 0 && diffDays >= 0;
+    },
+    
+    // Format service information
+    formatServiceInfo: function(date) {
+        const options = { 
+            weekday: 'long', 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric',
+            timeZone: 'America/Chicago'
+        };
+        return {
+            date: date.toLocaleDateString('en-US', options),
+            time: '5:30 PM',
+            location: '13509 Lyndon B Johnson Fwy, Garland, TX 75041',
+            phone: '(972) 940-2605'
+        };
+    }
+};
+
 // Utility functions
 const Utils = {
     formatDate: function(dateString) {
@@ -181,9 +484,11 @@ const Utils = {
             }
             button.textContent = 'Loading...';
             button.disabled = true;
+            button.classList.add('loading');
         } else {
             button.textContent = originalText || button.dataset.originalText || 'Submit';
             button.disabled = false;
+            button.classList.remove('loading');
             delete button.dataset.originalText;
         }
     },
@@ -203,6 +508,8 @@ const Utils = {
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
             z-index: 10000;
             animation: slideIn 0.3s ease;
+            max-width: 400px;
+            word-wrap: break-word;
         `;
         document.body.appendChild(messageEl);
 
@@ -223,8 +530,9 @@ const Utils = {
 
     isValidPhone: function(phone) {
         if (!phone) return true;
+        const cleanPhone = phone.replace(/[\s\-\(\)]/g, '');
         const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
-        return phone.replace(/[\s\-\(\)]/g, '').match(phoneRegex);
+        return phoneRegex.test(cleanPhone);
     },
 
     sanitizeInput: function(input) {
@@ -246,8 +554,82 @@ const Utils = {
             clearTimeout(timeout);
             timeout = setTimeout(later, wait);
         };
+    },
+
+    throttle: function(func, wait) {
+        let lastTime = 0;
+        return function executedFunction(...args) {
+            const now = Date.now();
+            if (now - lastTime >= wait) {
+                func(...args);
+                lastTime = now;
+            }
+        };
+    },
+
+    // Intersection Observer utility for lazy loading
+    createLazyLoadObserver: function(callback, options = {}) {
+        const defaultOptions = {
+            threshold: 0.1,
+            rootMargin: '50px 0px'
+        };
+        
+        return new IntersectionObserver(callback, { ...defaultOptions, ...options });
     }
 };
+
+// Lazy loading for images
+function initializeLazyLoading() {
+    const lazyImages = document.querySelectorAll('img[loading="lazy"]');
+    
+    if (lazyImages.length > 0) {
+        const imageObserver = Utils.createLazyLoadObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    loadImageWithFallback(img, img.src)
+                        .then(() => {
+                            img.classList.add('loaded');
+                        })
+                        .catch(() => {
+                            img.classList.add('error');
+                        });
+                    imageObserver.unobserve(img);
+                }
+            });
+        });
+        
+        lazyImages.forEach(img => imageObserver.observe(img));
+    }
+}
+
+// Performance monitoring
+function initializePerformanceMonitoring() {
+    // Monitor Core Web Vitals if available
+    if ('web-vital' in window) {
+        // Implementation would go here for performance tracking
+    }
+    
+    // Simple load time tracking
+    window.addEventListener('load', () => {
+        const loadTime = performance.now();
+        if (CONFIG.ENVIRONMENT === 'development') {
+            console.log(`Page loaded in ${Math.round(loadTime)}ms`);
+        }
+    });
+}
+
+// Initialize additional features when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+    initializeImmerseInteractions();
+    initializeLazyLoading();
+    initializePerformanceMonitoring();
+    
+    // Auto-update bi-monthly service info if on events page
+    if (window.location.pathname.includes('events') || window.location.pathname === '/') {
+        updateBimonthlyServiceDisplay();
+    }
+});
 
 // Error handling
 window.addEventListener('error', function(e) {
@@ -264,20 +646,75 @@ window.addEventListener('unhandledrejection', function(e) {
     }
 });
 
-// Export utilities
+// Export utilities and functions
 window.NewWineUtils = Utils;
 window.NewWineConfig = CONFIG;
+window.NewWineEventUtils = EventUtils;
+window.NewWineSlideshow = {
+    changeSlide,
+    currentSlide,
+    toggleSlideshow,
+    initializeSlideshow
+};
 
 // Add CSS animations
 const style = document.createElement('style');
 style.textContent = `
     @keyframes slideIn {
-        from { transform: translateX(100%); opacity: 0; }
-        to { transform: translateX(0); opacity: 1; }
+        0% { 
+            transform: translateX(100%); 
+            opacity: 0; 
+        }
+        100% { 
+            transform: translateX(0); 
+            opacity: 1; 
+        }
     }
+    
     @keyframes slideOut {
-        from { transform: translateX(0); opacity: 1; }
-        to { transform: translateX(100%); opacity: 0; }
+        0% { 
+            transform: translateX(0); 
+            opacity: 1; 
+        }
+        100% { 
+            transform: translateX(100%); 
+            opacity: 0; 
+        }
+    }
+    
+    .loading {
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .loading::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+        animation: loading-shimmer 1.5s infinite;
+    }
+    
+    @keyframes loading-shimmer {
+        0% { 
+            left: -100%; 
+        }
+        100% { 
+            left: 100%; 
+        }
+    }
+    
+    img.loaded {
+        opacity: 1;
+        transition: opacity 0.3s ease;
+    }
+    
+    img.error {
+        opacity: 0.5;
+        filter: grayscale(100%);
     }
 `;
 document.head.appendChild(style);

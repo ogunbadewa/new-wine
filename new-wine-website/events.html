@@ -27,126 +27,154 @@
         </div>
     </nav>
 
-    <!-- Events Hero Section -->
-    <section class="events-hero">
-        <div class="events-hero-content">
-            <h1 class="events-hero-title">Upcoming Events</h1>
-            <p class="events-hero-subtitle">Join us for life-changing experiences that will deepen your faith and strengthen your community connections.</p>
+    <!-- IMMERSE 2025 Hero Section -->
+    <section class="immerse-hero">
+        <div class="immerse-hero-overlay"></div>
+        <div class="immerse-hero-content">
+            <div class="immerse-hero-text">
+                <span class="immerse-date">August 10th, 2025</span>
+                <h1 class="immerse-title">IMMERSE<br><span class="year">2025</span></h1>
+                <p class="immerse-subtitle">An evening of intense prayer, intense worship, miracles, and praise</p>
+                <p class="immerse-time">5:00 PM - 9:00 PM</p>
+                <div class="immerse-cta-section">
+                    <button class="btn-immerse-primary" onclick="openRegistrationModal('IMMERSE NIGHT 2025')">
+                        <span>REGISTER NOW</span>
+                        <div class="btn-glow"></div>
+                    </button>
+                    <button class="btn-immerse-secondary" onclick="toggleEventDetails('immerse-details')">Learn More</button>
+                </div>
+            </div>
+            <div class="immerse-hero-flyer">
+                <img src="/media/images/IMMERSE 2025.jpg" alt="IMMERSE 2025 Flyer" class="flyer-image">
+            </div>
+        </div>
+        
+        <!-- Event Details (Initially Hidden) -->
+        <div id="immerse-details" class="immerse-details-section">
+            <div class="details-content">
+                <h3>What to Expect at IMMERSE 2025:</h3>
+                <div class="details-grid">
+                    <div class="detail-item">
+                        <div class="detail-icon">🎵</div>
+                        <div class="detail-text">
+                            <h4>Powerful Worship</h4>
+                            <p>Live music that will lift your spirit and connect you to God's presence</p>
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-icon">🙏</div>
+                        <div class="detail-text">
+                            <h4>Intense Prayer</h4>
+                            <p>Dedicated time for intercession and intimate communion with God</p>
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-icon">✨</div>
+                        <div class="detail-text">
+                            <h4>Miracles & Testimonies</h4>
+                            <p>Witness God's power through testimonies and miraculous moments</p>
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-icon">🤝</div>
+                        <div class="detail-text">
+                            <h4>Community Fellowship</h4>
+                            <p>Connect with fellow believers and strengthen your faith community</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="immerse-quote">
+                    <p>"Come expecting God to move in powerful ways. This is more than an event - it's an encounter."</p>
+                </div>
+            </div>
         </div>
     </section>
 
-    <!-- Featured Event - IMMERSE NIGHT -->
-    <section class="featured-event animate-on-scroll">
-        <div class="event-content">
-            <h2 class="event-title">Immerse Night 2025</h2>
-            <p class="event-details">An evening of intense prayer, intense worship, miracles, and praise</p>
-            <p class="event-date">August 10th, 2025 • 5:00 PM</p>
-            <div class="button-group">
-                <button class="btn-primary" onclick="openRegistrationModal('IMMERSE NIGHT 2025')">Register Now</button>
-                <button class="btn-secondary" onclick="toggleEventDetails('immerse-details')">Learn More</button>
-            </div>
+    <!-- IMMERSE 2024 Memories Section -->
+    <section class="immerse-memories">
+        <div class="memories-content">
+            <h2 class="memories-title">Relive IMMERSE 2024</h2>
+            <p class="memories-subtitle">Experience the powerful moments from last year's life-changing event</p>
             
-            <!-- Event Details (Initially Hidden) -->
-            <div id="immerse-details" style="display: none; margin-top: 3rem; text-align: left; max-width: 600px; margin-left: auto; margin-right: auto;">
-                <h4 style="color: var(--white); margin-bottom: 1rem; font-size: 1.2rem;">What to Expect:</h4>
-                <ul style="color: var(--white-paragraph); line-height: 1.8; margin-left: 2rem;">
-                    <li>Powerful worship with live music</li>
-                    <li>Intense prayer and intercession</li>
-                    <li>Testimonies of God's miracles</li>
-                    <li>Community fellowship and connection</li>
-                    <li>Free dinner and refreshments</li>
-                </ul>
-                <p style="color: var(--white-paragraph); margin-top: 1rem; font-style: italic;">
-                    Come expecting God to move in powerful ways. This is more than an event - it's an encounter.
-                </p>
+            <div class="slideshow-container">
+                <div class="slideshow-wrapper">
+                    <div class="slides-track" id="slidesTrack">
+                        <div class="slide active">
+                            <img src="/media/images/IMMERSE_2024/IM_2024_1.jpg" alt="IMMERSE 2024 - Worship" loading="lazy">
+                        </div>
+                        <div class="slide">
+                            <img src="/media/images/IMMERSE_2024/IM_2024_2.jpg" alt="IMMERSE 2024 - Prayer" loading="lazy">
+                        </div>
+                        <!-- Additional slides will be loaded dynamically -->
+                    </div>
+                    
+                    <div class="slideshow-controls">
+                        <button class="slide-btn prev" onclick="changeSlide(-1)" aria-label="Previous slide">‹</button>
+                        <button class="slide-btn next" onclick="changeSlide(1)" aria-label="Next slide">›</button>
+                    </div>
+                    
+                    <div class="slideshow-indicators" id="slideshowIndicators">
+                        <span class="indicator active" onclick="currentSlide(1)"></span>
+                        <span class="indicator" onclick="currentSlide(2)"></span>
+                    </div>
+                </div>
+                
+                <div class="slideshow-info">
+                    <button class="btn-play-pause" id="playPauseBtn" onclick="toggleSlideshow()">
+                        <span id="playPauseText">Pause</span>
+                    </button>
+                    <p class="slideshow-description">Automatic slideshow • Click to pause</p>
+                </div>
             </div>
+        </div>
+    </section>
+
+    <!-- Events Hero Section -->
+    <section class="events-hero">
+        <div class="events-hero-content">
+            <h1 class="events-hero-title">Our Upcoming Events</h1>
+            <p class="events-hero-subtitle">Join us for life-changing experiences that will deepen your faith and strengthen your community connections.</p>
         </div>
     </section>
 
     <!-- All Events List -->
     <section class="events-list">
-        <h2 class="section-title" style="margin-bottom: 3rem;">All Events</h2>
+        <h2 class="section-title" style="margin-bottom: 3rem;">Complete Event Calendar</h2>
         
         <div style="max-width: 1200px; margin: 0 auto;">
-            <!-- Weekly Events -->
+            <!-- Bi-Monthly Services -->
             <div class="event-item animate-on-scroll">
-                <div class="event-date-box">
-                    <div class="date-month">Every</div>
-                    <div class="date-day">SUN</div>
+                <div class="event-date-box" id="bimonthlyDateBox">
+                    <div class="date-month" id="bimonthlyMonth">Jul</div>
+                    <div class="date-day" id="bimonthlyDay">20</div>
                 </div>
                 <div class="event-info">
-                    <h3>Sunday Services</h3>
-                    <div class="event-time">10:00 AM & 6:00 PM</div>
-                    <p class="event-description">Join us for worship, teaching, and community. Our morning service is all-ages, while our evening service is specifically designed for teens and young adults.</p>
+                    <h3>Bi-Monthly Service</h3>
+                    <div class="event-time" id="bimonthlyDateTime">Next Service: July 20th, 2025 • 5:30 PM</div>
+                    <div class="event-location">📍 13509 Lyndon B Johnson Fwy, Garland, TX 75041</div>
+                    <div class="event-contact">📞 (972) 940-2605</div>
+                    <p class="event-description">Join us every other Sunday for worship, teaching, and community. Experience God's presence in a vibrant atmosphere of praise and fellowship.</p>
                 </div>
                 <div class="event-actions">
-                    <a href="new-here.html" class="btn-primary btn-small">Plan Your Visit</a>
+                    <button class="btn-primary btn-small" onclick="openRegistrationModal('Bi-Monthly Service')">Register Now</button>
+                    <a href="tel:+19729402605" class="btn-secondary btn-small">Call Us</a>
                 </div>
             </div>
 
             <!-- IMMERSE NIGHT -->
-            <div class="event-item animate-on-scroll">
+            <div class="event-item animate-on-scroll immerse-event-highlight">
                 <div class="event-date-box" style="background: var(--for-the-city);">
                     <div class="date-month">Aug</div>
                     <div class="date-day">10</div>
                 </div>
                 <div class="event-info">
-                    <h3>IMMERSE NIGHT 2025</h3>
-                    <div class="event-time">5:00 PM - 9:00 PM</div>
+                    <h3>IMMERSE NIGHT 2025 <span class="featured-badge">FEATURED</span></h3>
+                    <div class="event-time">August 10th, 2025 • 5:00 PM - 9:00 PM</div>
                     <p class="event-description">An evening of intense prayer, intense worship, miracles, and praise. Come expecting God to move in powerful ways.</p>
                 </div>
                 <div class="event-actions">
-                    <button class="btn-primary btn-small" onclick="openRegistrationModal('IMMERSE NIGHT 2025')">Register</button>
+                    <button class="btn-primary btn-small btn-featured" onclick="openRegistrationModal('IMMERSE NIGHT 2025')">Register Now</button>
                     <button class="btn-secondary btn-small" onclick="shareEvent('IMMERSE NIGHT 2025')">Share</button>
-                </div>
-            </div>
-
-            <!-- Summer Retreat -->
-            <div class="event-item animate-on-scroll">
-                <div class="event-date-box" style="background: var(--for-the-nations);">
-                    <div class="date-month">Jul</div>
-                    <div class="date-day">15</div>
-                </div>
-                <div class="event-info">
-                    <h3>Summer Retreat 2025</h3>
-                    <div class="event-time">July 15-20, 2025</div>
-                    <p class="event-description">A transformative week away from distractions to focus on God, build relationships, and find renewal in beautiful Colorado mountains.</p>
-                </div>
-                <div class="event-actions">
-                    <button class="btn-primary btn-small" onclick="openRegistrationModal('Summer Retreat 2025')">Register</button>
-                    <a href="#" class="btn-secondary btn-small">Learn More</a>
-                </div>
-            </div>
-
-            <!-- Monthly Worship Nights -->
-            <div class="event-item animate-on-scroll">
-                <div class="event-date-box" style="background: var(--counseling);">
-                    <div class="date-month">1st</div>
-                    <div class="date-day">FRI</div>
-                </div>
-                <div class="event-info">
-                    <h3>Worship Nights</h3>
-                    <div class="event-time">First Friday of Every Month • 7:00 PM</div>
-                    <p class="event-description">Intimate evenings of worship and prayer where we come together to encounter God's presence and connect as a community.</p>
-                </div>
-                <div class="event-actions">
-                    <button class="btn-primary btn-small" onclick="openRegistrationModal('Worship Night')">Join Us</button>
-                </div>
-            </div>
-
-            <!-- Small Group Launch -->
-            <div class="event-item animate-on-scroll">
-                <div class="event-date-box" style="background: var(--institute);">
-                    <div class="date-month">Sep</div>
-                    <div class="date-day">05</div>
-                </div>
-                <div class="event-info">
-                    <h3>Small Groups Launch</h3>
-                    <div class="event-time">September 5th, 2025 • 7:00 PM</div>
-                    <p class="event-description">Join a small group and build lasting friendships while growing in faith. Groups for all ages and life stages.</p>
-                </div>
-                <div class="event-actions">
-                    <button class="btn-primary btn-small" onclick="openRegistrationModal('Small Groups')">Sign Up</button>
                 </div>
             </div>
         </div>
@@ -209,7 +237,7 @@
                 </div>
                 <div class="footer-section">
                     <h3>Connect</h3>
-                    <p>123 Faith Avenue<br>Englewood, CO 80110</p>
+                    <p>13509 Lyndon B Johnson Fwy<br>Garland, TX 75041</p>
                     <p>+1 (972) 940-2605</p>
                     <p>info@newwinechurch.com</p>
                 </div>
@@ -224,6 +252,50 @@
     <script src="js/common.js"></script>
     <script src="js/api.js"></script>
     <script>
+        // Calculate next bi-monthly service date - UPDATED FOR TIMEZONE ACCURACY
+        function calculateNextBimonthlyService() {
+            // Create the last service date in Central Time (Dallas, TX)
+            // July 6th, 2025 at 5:30 PM Central Time
+            const lastServiceDate = new Date('2025-07-06T17:30:00');
+            
+            // Get current date/time in Central Time
+            const now = new Date();
+            const currentCentral = new Date(now.toLocaleString("en-US", {timeZone: "America/Chicago"}));
+            
+            // Start with the last service date
+            let nextService = new Date(lastServiceDate);
+            
+            // Keep adding 14 days (2 weeks) until we find the next future date
+            while (nextService <= currentCentral) {
+                nextService.setDate(nextService.getDate() + 14);
+            }
+            
+            return nextService;
+        }
+        
+        // Update bi-monthly service display
+        function updateBimonthlyServiceDisplay() {
+            const nextService = calculateNextBimonthlyService();
+            const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                              'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            const fullMonthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                                  'July', 'August', 'September', 'October', 'November', 'December'];
+            
+            // Get the date components in Central Time
+            const centralDate = new Date(nextService.toLocaleString("en-US", {timeZone: "America/Chicago"}));
+            const month = centralDate.getMonth();
+            const day = centralDate.getDate();
+            const year = centralDate.getFullYear();
+            
+            // Update date box
+            document.getElementById('bimonthlyMonth').textContent = monthNames[month];
+            document.getElementById('bimonthlyDay').textContent = day;
+            
+            // Update date/time display
+            const dateTimeText = `Next Service: ${fullMonthNames[month]} ${day}, ${year} • 5:30 PM`;
+            document.getElementById('bimonthlyDateTime').textContent = dateTimeText;
+        }
+
         // Event Registration Functions
         function openRegistrationModal(eventName) {
             document.getElementById('modalEventTitle').textContent = `Register for ${eventName}`;
@@ -240,10 +312,15 @@
 
         function toggleEventDetails(detailsId) {
             const details = document.getElementById(detailsId);
-            if (details.style.display === 'none' || details.style.display === '') {
-                details.style.display = 'block';
-            } else {
+            const isVisible = details.style.display === 'block';
+            
+            if (isVisible) {
                 details.style.display = 'none';
+                details.style.maxHeight = '0';
+            } else {
+                details.style.display = 'block';
+                details.style.maxHeight = 'none';
+                details.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
         }
 
@@ -297,7 +374,7 @@
                 }
             } catch (error) {
                 console.error('Registration error:', error);
-                alert('Sorry, there was an error with your registration. Please try again or call us directly.');
+                alert('Sorry, there was an error with your registration. Please try again or call us directly at (972) 940-2605.');
             } finally {
                 // Reset button
                 submitBtn.textContent = originalText;
@@ -317,6 +394,12 @@
             if (e.key === 'Escape') {
                 closeRegistrationModal();
             }
+        });
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            updateBimonthlyServiceDisplay();
+            initializeSlideshow();
         });
     </script>
 </body>
