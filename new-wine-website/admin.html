@@ -151,7 +151,7 @@
         .controls {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
             margin-bottom: 2rem;
             flex-wrap: wrap;
             gap: 1rem;
@@ -161,38 +161,50 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
         }
 
-        .search-filter {
+        .filters-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            flex: 1;
+        }
+
+        .filter-row {
             display: flex;
             gap: 1rem;
             align-items: center;
+            flex-wrap: wrap;
         }
 
-        .search-input {
+        .search-input, .filter-select, .date-input {
             padding: 0.75rem 1rem;
             border: 2px solid var(--lightest-gray);
             border-radius: 8px;
             font-size: 0.9rem;
-            min-width: 250px;
             transition: border-color 0.3s ease;
         }
 
-        .search-input:focus {
+        .search-input {
+            min-width: 250px;
+        }
+
+        .date-input {
+            min-width: 150px;
+        }
+
+        .search-input:focus, .filter-select:focus, .date-input:focus {
             outline: none;
             border-color: var(--brand-blue);
         }
 
         .filter-select {
-            padding: 0.75rem 1rem;
-            border: 2px solid var(--lightest-gray);
-            border-radius: 8px;
             background: var(--white);
-            font-size: 0.9rem;
             cursor: pointer;
         }
 
         .action-buttons {
             display: flex;
             gap: 1rem;
+            flex-wrap: wrap;
         }
 
         .btn {
@@ -207,6 +219,7 @@
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
+            white-space: nowrap;
         }
 
         .btn-primary {
@@ -227,16 +240,27 @@
             background: #059669;
         }
 
+        .btn-info {
+            background: var(--info);
+            color: var(--white);
+        }
+
+        .btn-info:hover {
+            background: #2563eb;
+        }
+
         /* Data Table */
         .table-container {
             background: var(--white);
             border-radius: 12px;
             overflow: hidden;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            overflow-x: auto;
         }
 
         .table {
             width: 100%;
+            min-width: 1000px;
             border-collapse: collapse;
         }
 
@@ -249,6 +273,7 @@
             font-size: 0.85rem;
             text-transform: uppercase;
             letter-spacing: 1px;
+            white-space: nowrap;
         }
 
         .table td {
@@ -272,6 +297,7 @@
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            white-space: nowrap;
         }
 
         .type-registration {
@@ -292,11 +318,17 @@
             border-radius: 4px;
             transition: background 0.3s ease;
             color: var(--body);
+            margin: 0 2px;
         }
 
         .action-btn:hover {
             background: var(--lightest-gray);
             color: var(--dark);
+        }
+
+        .actions-cell {
+            min-width: 80px;
+            text-align: center;
         }
 
         /* Loading State */
@@ -412,6 +444,24 @@
             text-align: center;
         }
 
+        /* Results Summary */
+        .results-summary {
+            background: #f8fafc;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1rem;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .results-count {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
         /* Mobile Responsive */
         @media (max-width: 768px) {
             .header-content {
@@ -429,25 +479,27 @@
                 align-items: stretch;
             }
 
-            .search-filter {
+            .filter-row {
                 flex-direction: column;
+                align-items: stretch;
             }
 
-            .search-input {
+            .search-input, .date-input {
                 min-width: auto;
-            }
-
-            .table-container {
-                overflow-x: auto;
-            }
-
-            .table {
-                min-width: 600px;
             }
 
             .admin-main {
                 padding: 1rem;
                 margin-top: 160px;
+            }
+
+            .action-buttons {
+                justify-content: stretch;
+            }
+
+            .btn {
+                flex: 1;
+                justify-content: center;
             }
         }
     </style>
@@ -512,21 +564,32 @@
 
             <!-- Controls -->
             <div class="controls">
-                <div class="search-filter">
-                    <input type="text" id="searchInput" class="search-input" placeholder="Search by name or email...">
-                    <select id="typeFilter" class="filter-select">
-                        <option value="all">All Types</option>
-                        <option value="registration">Event Registrations</option>
-                        <option value="contact">Contact Forms</option>
-                    </select>
-                    <select id="eventFilter" class="filter-select">
-                        <option value="all">All Events</option>
-                        <option value="IMMERSE NIGHT 2025">Immerse Night 2025</option>
-                        <option value="Summer Retreat 2025">Summer Retreat 2025</option>
-                        <option value="Worship Night">Worship Night</option>
-                    </select>
+                <div class="filters-section">
+                    <div class="filter-row">
+                        <input type="text" id="searchInput" class="search-input" placeholder="Search by name or email...">
+                        <select id="typeFilter" class="filter-select">
+                            <option value="all">All Types</option>
+                            <option value="registration">Event Registration</option>
+                            <option value="contact">Contact Form</option>
+                        </select>
+                        <select id="eventFilter" class="filter-select">
+                            <option value="all">All Events</option>
+                            <option value="IMMERSE NIGHT 2025">Immerse Night 2025</option>
+                            <option value="Bi-Monthly Service">Bi-Monthly Service</option>
+                        </select>
+                    </div>
+                    <div class="filter-row">
+                        <label style="font-weight: 600; color: var(--dark); margin-right: 0.5rem;">Date Range:</label>
+                        <input type="date" id="startDate" class="date-input" placeholder="Start Date">
+                        <span style="color: var(--body);">to</span>
+                        <input type="date" id="endDate" class="date-input" placeholder="End Date">
+                        <button type="button" class="btn btn-secondary" onclick="clearDateFilter()" style="background: #6b7280; color: white;">Clear Dates</button>
+                    </div>
                 </div>
                 <div class="action-buttons">
+                    <button class="btn btn-info" onclick="copyEmails()">
+                        📧 Copy Emails
+                    </button>
                     <button class="btn btn-success" onclick="exportData()">
                         📊 Export CSV
                     </button>
@@ -534,6 +597,12 @@
                         🔄 Refresh
                     </button>
                 </div>
+            </div>
+
+            <!-- Results Summary -->
+            <div id="resultsSummary" class="results-summary" style="display: none;">
+                <div class="results-count" id="resultsCount">0 results</div>
+                <div id="emailCount" style="color: var(--body);"></div>
             </div>
 
             <!-- Data Table -->
@@ -551,9 +620,9 @@
                             <th>Email</th>
                             <th>Phone</th>
                             <th>Event/Subject</th>
-                            <th>Message/Emergency Contact</th>
+                            <th>Message/Special Requests</th>
                             <th>Date</th>
-                            <th>Actions</th>
+                            <th class="actions-cell">Actions</th>
                         </tr>
                     </thead>
                     <tbody id="dataTableBody">
@@ -574,6 +643,7 @@
     <script>
         // Global state
         let currentData = [];
+        let filteredData = [];
         let isLoggedIn = false;
 
         // Initialize app
@@ -599,6 +669,8 @@
             document.getElementById('searchInput').addEventListener('input', filterData);
             document.getElementById('typeFilter').addEventListener('change', filterData);
             document.getElementById('eventFilter').addEventListener('change', filterData);
+            document.getElementById('startDate').addEventListener('change', filterData);
+            document.getElementById('endDate').addEventListener('change', filterData);
         }
 
         async function handleLogin(e) {
@@ -661,8 +733,15 @@
                     ...contacts.data.map(item => ({ ...item, type: 'contact' }))
                 ];
                 
+                // Sort by date (newest first)
+                currentData.sort((a, b) => {
+                    const dateA = new Date(a.registrationDate || a.submissionDate);
+                    const dateB = new Date(b.registrationDate || b.submissionDate);
+                    return dateB - dateA;
+                });
+                
                 updateStats();
-                displayData(currentData);
+                filterData(); // This will call displayData with current filters
                 
             } catch (error) {
                 console.error('Load data error:', error);
@@ -675,6 +754,7 @@
             document.getElementById('loadingState').style.display = 'block';
             document.getElementById('dataTable').style.display = 'none';
             document.getElementById('emptyState').style.display = 'none';
+            document.getElementById('resultsSummary').style.display = 'none';
         }
 
         function updateStats() {
@@ -695,15 +775,68 @@
             document.getElementById('recentCount').textContent = recent.length;
         }
 
+        function filterData() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const typeFilter = document.getElementById('typeFilter').value;
+            const eventFilter = document.getElementById('eventFilter').value;
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+
+            filteredData = currentData;
+
+            // Search filter
+            if (searchTerm) {
+                filteredData = filteredData.filter(item => 
+                    (item.fullName || item.name || '').toLowerCase().includes(searchTerm) ||
+                    (item.email || '').toLowerCase().includes(searchTerm)
+                );
+            }
+
+            // Type filter
+            if (typeFilter !== 'all') {
+                filteredData = filteredData.filter(item => item.type === typeFilter);
+            }
+
+            // Event filter
+            if (eventFilter !== 'all') {
+                filteredData = filteredData.filter(item => 
+                    (item.eventName || item.subject) === eventFilter
+                );
+            }
+
+            // Date range filter
+            if (startDate || endDate) {
+                filteredData = filteredData.filter(item => {
+                    const itemDate = new Date(item.registrationDate || item.submissionDate);
+                    const start = startDate ? new Date(startDate) : new Date('1900-01-01');
+                    const end = endDate ? new Date(endDate + 'T23:59:59') : new Date('2100-12-31');
+                    
+                    return itemDate >= start && itemDate <= end;
+                });
+            }
+
+            displayData(filteredData);
+        }
+
         function displayData(data) {
             const tbody = document.getElementById('dataTableBody');
+            const resultsSummary = document.getElementById('resultsSummary');
+            const resultsCount = document.getElementById('resultsCount');
+            const emailCount = document.getElementById('emailCount');
             
             if (data.length === 0) {
                 document.getElementById('loadingState').style.display = 'none';
                 document.getElementById('dataTable').style.display = 'none';
                 document.getElementById('emptyState').style.display = 'block';
+                resultsSummary.style.display = 'none';
                 return;
             }
+
+            // Update results summary
+            const uniqueEmails = [...new Set(data.map(item => item.email))];
+            resultsCount.textContent = `${data.length} result${data.length !== 1 ? 's' : ''}`;
+            emailCount.textContent = `${uniqueEmails.length} unique email${uniqueEmails.length !== 1 ? 's' : ''}`;
+            resultsSummary.style.display = 'flex';
 
             tbody.innerHTML = data.map(item => `
                 <tr>
@@ -712,15 +845,15 @@
                             ${item.type === 'registration' ? 'Event Registration' : 'Contact Form'}
                         </span>
                     </td>
-                    <td><strong>${item.fullName || item.name}</strong></td>
-                    <td>${item.email}</td>
+                    <td><strong>${item.fullName || item.name || 'N/A'}</strong></td>
+                    <td>${item.email || 'N/A'}</td>
                     <td>${item.phone || 'N/A'}</td>
                     <td>${item.eventName || item.subject || 'N/A'}</td>
                     <td style="max-width: 200px; word-wrap: break-word;">
-                        ${item.emergencyContact || item.message || 'N/A'}
+                        ${item.specialRequests || item.message || 'N/A'}
                     </td>
                     <td>${window.NewWineUtils.formatDate(item.registrationDate || item.submissionDate)}</td>
-                    <td>
+                    <td class="actions-cell">
                         <button class="action-btn" onclick="deleteItem(${item.id}, '${item.type}')" title="Delete">
                             🗑️
                         </button>
@@ -733,32 +866,48 @@
             document.getElementById('emptyState').style.display = 'none';
         }
 
-        function filterData() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const typeFilter = document.getElementById('typeFilter').value;
-            const eventFilter = document.getElementById('eventFilter').value;
+        function clearDateFilter() {
+            document.getElementById('startDate').value = '';
+            document.getElementById('endDate').value = '';
+            filterData();
+        }
 
-            let filtered = currentData;
-
-            // Search filter
-            if (searchTerm) {
-                filtered = filtered.filter(item => 
-                    (item.fullName || item.name).toLowerCase().includes(searchTerm) ||
-                    item.email.toLowerCase().includes(searchTerm)
-                );
+        function copyEmails() {
+            if (filteredData.length === 0) {
+                window.NewWineUtils.showMessage('No data to copy emails from', 'error');
+                return;
             }
 
-            // Type filter
-            if (typeFilter !== 'all') {
-                filtered = filtered.filter(item => item.type === typeFilter);
+            // Get unique emails from filtered data
+            const emails = [...new Set(filteredData.map(item => item.email).filter(email => email))];
+            
+            if (emails.length === 0) {
+                window.NewWineUtils.showMessage('No emails found in current results', 'error');
+                return;
             }
 
-            // Event filter
-            if (eventFilter !== 'all') {
-                filtered = filtered.filter(item => item.eventName === eventFilter);
-            }
-
-            displayData(filtered);
+            // Join emails with semicolon for Gmail CC field
+            const emailString = emails.join('; ');
+            
+            // Copy to clipboard
+            navigator.clipboard.writeText(emailString).then(() => {
+                window.NewWineUtils.showMessage(`Copied ${emails.length} unique email addresses to clipboard`, 'success');
+            }).catch(err => {
+                console.error('Could not copy emails: ', err);
+                
+                // Fallback: create a text area and copy
+                const textArea = document.createElement('textarea');
+                textArea.value = emailString;
+                document.body.appendChild(textArea);
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    window.NewWineUtils.showMessage(`Copied ${emails.length} unique email addresses to clipboard`, 'success');
+                } catch (fallbackErr) {
+                    window.NewWineUtils.showMessage('Failed to copy emails to clipboard', 'error');
+                }
+                document.body.removeChild(textArea);
+            });
         }
 
         async function deleteItem(id, type) {

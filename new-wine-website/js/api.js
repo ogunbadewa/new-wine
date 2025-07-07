@@ -100,7 +100,6 @@ async function submitContactForm(contactData) {
  * @param {string} registrationData.fullName - Full name
  * @param {string} registrationData.email - Email address
  * @param {string} [registrationData.phone] - Phone number
- * @param {string} [registrationData.emergencyContact] - Emergency contact
  * @param {string} registrationData.eventName - Event name
  * @param {string} [registrationData.specialRequests] - Special requests
  * @returns {Promise<Object>} API response
@@ -119,12 +118,11 @@ async function registerForEvent(registrationData) {
         throw new Error('Please enter a valid phone number');
     }
     
-    // Sanitize inputs
+    // Sanitize inputs - NOTE: emergencyContact field removed
     const sanitizedData = {
         fullName: window.NewWineUtils.sanitizeInput(registrationData.fullName),
         email: window.NewWineUtils.sanitizeInput(registrationData.email),
         phone: registrationData.phone ? window.NewWineUtils.sanitizeInput(registrationData.phone) : null,
-        emergencyContact: registrationData.emergencyContact ? window.NewWineUtils.sanitizeInput(registrationData.emergencyContact) : null,
         eventName: window.NewWineUtils.sanitizeInput(registrationData.eventName),
         specialRequests: registrationData.specialRequests ? window.NewWineUtils.sanitizeInput(registrationData.specialRequests) : null,
         registrationDate: window.NewWineUtils.getCurrentTimestamp()
@@ -264,6 +262,31 @@ async function getAdminStats() {
     return await apiRequest('/admin/stats');
 }
 
+/**
+ * Get filtered data with multiple criteria (admin only)
+ * @param {Object} filters - Filter criteria
+ * @param {string} [filters.searchTerm] - Search term
+ * @param {string} [filters.type] - Type filter (all, registration, contact)
+ * @param {string} [filters.eventName] - Event name filter
+ * @param {string} [filters.startDate] - Start date (ISO string)
+ * @param {string} [filters.endDate] - End date (ISO string)
+ * @returns {Promise<Object>} API response with filtered data
+ */
+async function getFilteredData(filters = {}) {
+    const params = new URLSearchParams();
+    
+    if (filters.searchTerm) params.append('searchTerm', filters.searchTerm);
+    if (filters.type && filters.type !== 'all') params.append('type', filters.type);
+    if (filters.eventName && filters.eventName !== 'all') params.append('eventName', filters.eventName);
+    if (filters.startDate) params.append('startDate', filters.startDate);
+    if (filters.endDate) params.append('endDate', filters.endDate);
+    
+    const queryString = params.toString();
+    const endpoint = queryString ? `/admin/data/search?${queryString}` : '/admin/data/search';
+    
+    return await apiRequest(endpoint);
+}
+
 // ========================================
 // UTILITY FUNCTIONS
 // ========================================
@@ -358,6 +381,7 @@ window.NewWineAPI = {
     deleteContact,
     exportDataToCsv,
     getAdminStats,
+    getFilteredData,
     
     // Utility functions
     isAdminLoggedIn,

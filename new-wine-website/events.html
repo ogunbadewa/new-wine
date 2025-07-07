@@ -203,11 +203,6 @@
             </div>
             
             <div class="form-group">
-                <label for="emergencyContact" class="form-label">Emergency Contact</label>
-                <input type="text" id="emergencyContact" name="emergencyContact" class="form-input" placeholder="Name and phone number">
-            </div>
-            
-            <div class="form-group">
                 <label for="specialRequests" class="form-label">Special Requests or Dietary Restrictions</label>
                 <textarea id="specialRequests" name="specialRequests" class="form-input form-textarea" placeholder="Let us know if you have any special needs..."></textarea>
             </div>
@@ -373,7 +368,6 @@
                 fullName: formData.get('fullName'),
                 email: formData.get('email'),
                 phone: formData.get('phone') || null,
-                emergencyContact: formData.get('emergencyContact') || null,
                 eventName: formData.get('eventName'),
                 specialRequests: formData.get('specialRequests') || null,
                 registrationDate: new Date().toISOString()
