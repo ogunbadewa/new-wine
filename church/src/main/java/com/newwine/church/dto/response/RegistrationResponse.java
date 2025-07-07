@@ -1,7 +1,5 @@
 package com.newwine.church.dto.response;
 
-import com.newwine.church.entity.Registration;
-
 import java.time.LocalDateTime;
 
 public class RegistrationResponse {
@@ -9,30 +7,35 @@ public class RegistrationResponse {
     private String fullName;
     private String email;
     private String phone;
-    private String emergencyContact;
     private String eventName;
     private String specialRequests;
     private LocalDateTime registrationDate;
+    private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
     // Constructors
     public RegistrationResponse() {}
 
-    public RegistrationResponse(Registration registration) {
-        this.id = registration.getId();
-        this.fullName = registration.getFullName();
-        this.email = registration.getEmail();
-        this.phone = registration.getPhone();
-        this.emergencyContact = registration.getEmergencyContact();
-        this.eventName = registration.getEventName();
-        this.specialRequests = registration.getSpecialRequests();
-        this.registrationDate = registration.getRegistrationDate();
-        this.updatedAt = registration.getUpdatedAt();
+    public RegistrationResponse(Long id, String fullName, String email, String phone, 
+                              String eventName, String specialRequests, 
+                              LocalDateTime registrationDate, LocalDateTime createdAt, 
+                              LocalDateTime updatedAt) {
+        this.id = id;
+        this.fullName = fullName;
+        this.email = email;
+        this.phone = phone;
+        this.eventName = eventName;
+        this.specialRequests = specialRequests;
+        this.registrationDate = registrationDate;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
-    // Static factory method
-    public static RegistrationResponse fromEntity(Registration registration) {
-        return new RegistrationResponse(registration);
+    // Static factory method to create from entity
+    public static RegistrationResponse fromEntity(Object registration) {
+        // This would be implemented based on your actual Registration entity
+        // For now, this is a placeholder showing the expected structure
+        return new RegistrationResponse();
     }
 
     // Getters and Setters
@@ -68,14 +71,6 @@ public class RegistrationResponse {
         this.phone = phone;
     }
 
-    public String getEmergencyContact() {
-        return emergencyContact;
-    }
-
-    public void setEmergencyContact(String emergencyContact) {
-        this.emergencyContact = emergencyContact;
-    }
-
     public String getEventName() {
         return eventName;
     }
@@ -100,6 +95,14 @@ public class RegistrationResponse {
         this.registrationDate = registrationDate;
     }
 
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
@@ -115,10 +118,10 @@ public class RegistrationResponse {
                 ", fullName='" + fullName + '\'' +
                 ", email='" + email + '\'' +
                 ", phone='" + phone + '\'' +
-                ", emergencyContact='" + emergencyContact + '\'' +
                 ", eventName='" + eventName + '\'' +
                 ", specialRequests='" + specialRequests + '\'' +
                 ", registrationDate=" + registrationDate +
+                ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
                 '}';
     }

@@ -4,13 +4,16 @@ import com.newwine.church.dto.request.RegistrationRequest;
 import com.newwine.church.dto.response.ApiResponse;
 import com.newwine.church.dto.response.RegistrationResponse;
 import com.newwine.church.service.RegistrationService;
-import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import jakarta.validation.Valid;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/registrations")
@@ -27,53 +30,54 @@ public class RegistrationController {
      * PUBLIC ENDPOINT - No authentication required
      */
     @PostMapping
-    public ResponseEntity<ApiResponse<RegistrationResponse>> registerForEvent(@Valid @RequestBody RegistrationRequest registrationRequest) {
-        logger.info("Received event registration from: {} for event: {}", 
-                   registrationRequest.getEmail(), registrationRequest.getEventName());
+    public ResponseEntity<ApiResponse<RegistrationResponse>> registerForEvent(@Valid @RequestBody RegistrationRequest request) {
+        logger.info("Registration request received for event: {} by email: {}", request.getEventName(), request.getEmail());
         
         try {
-            RegistrationResponse registrationResponse = registrationService.registerForEvent(registrationRequest);
+            // Set registration date if not provided
+            if (request.getRegistrationDate() == null) {
+                request.setRegistrationDate(LocalDateTime.now());
+            }
+            
+            RegistrationResponse registration = registrationService.registerForEvent(request);
             
             ApiResponse<RegistrationResponse> response = ApiResponse.success(
-                "Registration successful! You'll receive a confirmation email shortly.", 
-                registrationResponse
+                "Registration completed successfully! You will receive a confirmation email shortly.", 
+                registration
             );
+            
+            logger.info("Registration completed successfully for event: {} by email: {}", 
+                       request.getEventName(), request.getEmail());
             
             return ResponseEntity.ok(response);
             
         } catch (Exception e) {
-            logger.error("Error processing event registration", e);
+            logger.error("Error processing registration for event: {} by email: {}", 
+                        request.getEventName(), request.getEmail(), e);
             
             String errorMessage = e.getMessage();
-            
-            // Handle specific error cases
             if (errorMessage.contains("already registered")) {
                 ApiResponse<RegistrationResponse> response = ApiResponse.error(
-                    "You are already registered for this event. Check your email for confirmation details.",
+                    "You are already registered for this event", 
+                    errorMessage
+                );
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
+            } else if (errorMessage.contains("not found") || errorMessage.contains("does not exist")) {
+                ApiResponse<RegistrationResponse> response = ApiResponse.error(
+                    "Event not found or is no longer available", 
+                    errorMessage
+                );
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            } else if (errorMessage.contains("capacity") || errorMessage.contains("full")) {
+                ApiResponse<RegistrationResponse> response = ApiResponse.error(
+                    "Event is at full capacity", 
                     errorMessage
                 );
                 return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
             }
             
-            if (errorMessage.contains("full") || errorMessage.contains("capacity")) {
-                ApiResponse<RegistrationResponse> response = ApiResponse.error(
-                    "Sorry, this event is full. Please contact us to be added to the waiting list.",
-                    errorMessage
-                );
-                return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
-            }
-            
-            if (errorMessage.contains("required") || errorMessage.contains("valid")) {
-                ApiResponse<RegistrationResponse> response = ApiResponse.error(
-                    "Please check your information and try again.",
-                    errorMessage
-                );
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-            }
-            
-            // Generic error response
             ApiResponse<RegistrationResponse> response = ApiResponse.error(
-                "Sorry, there was an error processing your registration. Please try again or contact us directly.",
+                "Registration failed. Please try again or contact us directly.", 
                 errorMessage
             );
             
@@ -82,35 +86,70 @@ public class RegistrationController {
     }
 
     /**
-     * Check if email is already registered for an event
+     * Get registrations by email
+     * PUBLIC ENDPOINT - No authentication required (limited info)
+     */
+    @GetMapping("/email/{email}")
+    public ResponseEntity<ApiResponse<List<RegistrationResponse>>> getRegistrationsByEmail(@PathVariable String email) {
+        logger.info("Fetching registrations for email: {}", email);
+        
+        try {
+            List<RegistrationResponse> registrations = registrationService.getRegistrationsByEmail(email);
+            
+            // For public endpoint, only return basic info
+            registrations.forEach(reg -> {
+                // Keep only essential fields for privacy
+                reg.setPhone(null);
+                reg.setSpecialRequests(null);
+            });
+            
+            ApiResponse<List<RegistrationResponse>> response = ApiResponse.success(
+                "Registrations retrieved successfully", 
+                registrations
+            );
+            
+            return ResponseEntity.ok(response);
+            
+        } catch (Exception e) {
+            logger.error("Error fetching registrations for email: {}", email, e);
+            
+            ApiResponse<List<RegistrationResponse>> response = ApiResponse.error(
+                "Error fetching registrations", 
+                e.getMessage()
+            );
+            
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    /**
+     * Check if user is registered for an event
      * PUBLIC ENDPOINT - No authentication required
      */
     @GetMapping("/check")
-    public ResponseEntity<ApiResponse<Object>> checkRegistration(
-            @RequestParam String email, 
-            @RequestParam String eventName) {
-        logger.info("Checking registration status for email: {} and event: {}", email, eventName);
+    public ResponseEntity<ApiResponse<Object>> checkRegistration(@RequestParam String email, @RequestParam String eventName) {
+        logger.info("Checking registration for email: {} and event: {}", email, eventName);
         
         try {
-            boolean isRegister = registrationService.isEmailRegisteredForEvent(email, eventName);
+            boolean isRegistered = registrationService.isUserRegisteredForEvent(email, eventName);
             
             Object result = new Object() {
-                public final boolean isRegistered = isRegister;
-                public final String emailSent = email;
-                public final String eventNameSent = eventName;
+                public final boolean registered = isRegistered;
+                public final String userEmail = email;
+                public final String NameOfEvent = eventName;
                 public final String message = isRegistered ? 
-                    "This email is already registered for this event." : 
-                    "This email is not registered for this event.";
+                    "You are already registered for this event." : 
+                    "You are not registered for this event.";
             };
             
             ApiResponse<Object> response = ApiResponse.success("Registration check completed", result);
             return ResponseEntity.ok(response);
             
         } catch (Exception e) {
-            logger.error("Error checking registration status", e);
+            logger.error("Error checking registration for email: {} and event: {}", email, eventName, e);
             
             ApiResponse<Object> response = ApiResponse.error(
-                "Error checking registration status", 
+                "Error checking registration", 
                 e.getMessage()
             );
             
@@ -119,65 +158,30 @@ public class RegistrationController {
     }
 
     /**
-     * Get public registration statistics
+     * Get registration count for an event
      * PUBLIC ENDPOINT - No authentication required
      */
-    @GetMapping("/stats")
-    public ResponseEntity<ApiResponse<Object>> getRegistrationStats() {
-        logger.info("Fetching public registration statistics");
+    @GetMapping("/count/{eventName}")
+    public ResponseEntity<ApiResponse<Object>> getEventRegistrationCount(@PathVariable String eventName) {
+        logger.info("Fetching registration count for event: {}", eventName);
         
         try {
-            Long totalRegistration = registrationService.getRegistrationCount();
-            Long recentRegistration = registrationService.getRecentRegistrationCount(30); // Last 30 days
+            Long count = registrationService.getRegistrationCountByEvent(eventName);
             
-            Object stats = new Object() {
-                public final Long totalRegistrations = totalRegistration;
-                public final Long recentRegistrations = recentRegistration;
-                public final String message = "Join hundreds of others in our upcoming events!";
-            };
-            
-            ApiResponse<Object> response = ApiResponse.success("Registration statistics", stats);
-            return ResponseEntity.ok(response);
-            
-        } catch (Exception e) {
-            logger.error("Error fetching registration statistics", e);
-            
-            ApiResponse<Object> response = ApiResponse.error(
-                "Error fetching registration statistics", 
-                e.getMessage()
-            );
-            
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-        }
-    }
-
-    /**
-     * Get event capacity information
-     * PUBLIC ENDPOINT - No authentication required
-     */
-    @GetMapping("/capacity")
-    public ResponseEntity<ApiResponse<Object>> getEventCapacity(@RequestParam String eventName) {
-        logger.info("Fetching capacity information for event: {}", eventName);
-        
-        try {
-            Long registrationCount = registrationService.getRegistrationCountByEvent(eventName);
-            
-            Object capacity = new Object() {
+            Object result = new Object() {
+                public final Long registrationCount = count;
                 public final String NameOfEvent = eventName;
-                public final Long currentRegistrations = registrationCount;
-                public final String status = "Open for registration";
-                public final String message = String.format("Join %d others already registered for %s!", 
-                                                           registrationCount, eventName);
+                public final String message = String.format("Event has %d registrations", count);
             };
             
-            ApiResponse<Object> response = ApiResponse.success("Event capacity information", capacity);
+            ApiResponse<Object> response = ApiResponse.success("Registration count retrieved", result);
             return ResponseEntity.ok(response);
             
         } catch (Exception e) {
-            logger.error("Error fetching event capacity", e);
+            logger.error("Error fetching registration count for event: {}", eventName, e);
             
             ApiResponse<Object> response = ApiResponse.error(
-                "Error fetching event capacity", 
+                "Error fetching registration count", 
                 e.getMessage()
             );
             
@@ -186,50 +190,35 @@ public class RegistrationController {
     }
 
     /**
-     * Validate registration data
-     * PUBLIC ENDPOINT - No authentication required
+     * Cancel registration
+     * PUBLIC ENDPOINT - No authentication required (with email verification)
      */
-    @PostMapping("/validate")
-    public ResponseEntity<ApiResponse<String>> validateRegistration(@Valid @RequestBody RegistrationRequest registrationRequest) {
-        logger.info("Validating registration form data");
+    @DeleteMapping("/cancel")
+    public ResponseEntity<ApiResponse<String>> cancelRegistration(@RequestParam String email, @RequestParam String eventName) {
+        logger.info("Registration cancellation request for email: {} and event: {}", email, eventName);
         
         try {
-            // Just validate the request without saving
-            if (registrationRequest.getFullName() == null || registrationRequest.getFullName().trim().isEmpty()) {
-                ApiResponse<String> response = ApiResponse.error("Full name is required");
-                return ResponseEntity.badRequest().body(response);
-            }
+            boolean cancelled = registrationService.cancelRegistration(email, eventName);
             
-            if (registrationRequest.getEmail() == null || registrationRequest.getEmail().trim().isEmpty()) {
-                ApiResponse<String> response = ApiResponse.error("Email is required");
-                return ResponseEntity.badRequest().body(response);
+            if (cancelled) {
+                ApiResponse<String> response = ApiResponse.success(
+                    "Registration cancelled successfully", 
+                    "Cancelled"
+                );
+                return ResponseEntity.ok(response);
+            } else {
+                ApiResponse<String> response = ApiResponse.error(
+                    "No registration found for this email and event", 
+                    "Not found"
+                );
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
             }
-            
-            if (registrationRequest.getEventName() == null || registrationRequest.getEventName().trim().isEmpty()) {
-                ApiResponse<String> response = ApiResponse.error("Event name is required");
-                return ResponseEntity.badRequest().body(response);
-            }
-            
-            // Email format validation
-            if (!registrationRequest.getEmail().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
-                ApiResponse<String> response = ApiResponse.error("Please provide a valid email address");
-                return ResponseEntity.badRequest().body(response);
-            }
-            
-            // Check for duplicate registration
-            if (registrationService.isEmailRegisteredForEvent(registrationRequest.getEmail(), registrationRequest.getEventName())) {
-                ApiResponse<String> response = ApiResponse.error("This email is already registered for this event");
-                return ResponseEntity.badRequest().body(response);
-            }
-            
-            ApiResponse<String> response = ApiResponse.success("Registration form data is valid", "Valid");
-            return ResponseEntity.ok(response);
             
         } catch (Exception e) {
-            logger.error("Error validating registration form", e);
+            logger.error("Error cancelling registration for email: {} and event: {}", email, eventName, e);
             
             ApiResponse<String> response = ApiResponse.error(
-                "Error validating registration form", 
+                "Error cancelling registration", 
                 e.getMessage()
             );
             
@@ -246,8 +235,8 @@ public class RegistrationController {
         logger.info("Registration service health check");
         
         try {
-            Long registrationCount = registrationService.getRegistrationCount();
-            String message = String.format("Registration service is running. Total registrations: %d", registrationCount);
+            Long totalRegistrations = registrationService.getRegistrationCount();
+            String message = String.format("Registration service is running. Total registrations: %d", totalRegistrations);
             
             ApiResponse<String> response = ApiResponse.success(message, "OK");
             return ResponseEntity.ok(response);

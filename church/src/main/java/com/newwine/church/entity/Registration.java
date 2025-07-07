@@ -30,13 +30,9 @@ public class Registration {
     @Column(nullable = false, length = 255)
     private String email;
 
-    @Size(max = 20, message = "Phone must not exceed 20 characters")
+    @Size(max = 20, message = "Phone number must not exceed 20 characters")
     @Column(length = 20)
     private String phone;
-
-    @Size(max = 200, message = "Emergency contact must not exceed 200 characters")
-    @Column(name = "emergency_contact", length = 200)
-    private String emergencyContact;
 
     @NotBlank(message = "Event name is required")
     @Size(max = 100, message = "Event name must not exceed 100 characters")
@@ -47,9 +43,12 @@ public class Registration {
     @Column(name = "special_requests", length = 1000)
     private String specialRequests;
 
-    @CreatedDate
-    @Column(name = "registration_date", nullable = false, updatable = false)
+    @Column(name = "registration_date")
     private LocalDateTime registrationDate;
+
+    @CreatedDate
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
 
     @LastModifiedDate
     @Column(name = "updated_at")
@@ -58,14 +57,14 @@ public class Registration {
     // Constructors
     public Registration() {}
 
-    public Registration(String fullName, String email, String phone, String emergencyContact, 
-                       String eventName, String specialRequests) {
+    public Registration(String fullName, String email, String phone, String eventName, 
+                       String specialRequests, LocalDateTime registrationDate) {
         this.fullName = fullName;
         this.email = email;
         this.phone = phone;
-        this.emergencyContact = emergencyContact;
         this.eventName = eventName;
         this.specialRequests = specialRequests;
+        this.registrationDate = registrationDate;
     }
 
     // Getters and Setters
@@ -101,14 +100,6 @@ public class Registration {
         this.phone = phone;
     }
 
-    public String getEmergencyContact() {
-        return emergencyContact;
-    }
-
-    public void setEmergencyContact(String emergencyContact) {
-        this.emergencyContact = emergencyContact;
-    }
-
     public String getEventName() {
         return eventName;
     }
@@ -133,6 +124,14 @@ public class Registration {
         this.registrationDate = registrationDate;
     }
 
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
@@ -148,10 +147,10 @@ public class Registration {
                 ", fullName='" + fullName + '\'' +
                 ", email='" + email + '\'' +
                 ", phone='" + phone + '\'' +
-                ", emergencyContact='" + emergencyContact + '\'' +
                 ", eventName='" + eventName + '\'' +
                 ", specialRequests='" + specialRequests + '\'' +
                 ", registrationDate=" + registrationDate +
+                ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
                 '}';
     }

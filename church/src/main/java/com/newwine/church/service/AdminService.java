@@ -9,9 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 @Service
 public class AdminService {
@@ -203,12 +208,6 @@ public class AdminService {
                 .count();
         analytics.put("specialRequestsCount", specialRequestsCount);
         
-        // Count registrations with emergency contacts
-        long emergencyContactsCount = registrations.stream()
-                .filter(r -> r.getEmergencyContact() != null && !r.getEmergencyContact().trim().isEmpty())
-                .count();
-        analytics.put("emergencyContactsCount", emergencyContactsCount);
-        
         // Count registrations with phone numbers
         long phoneNumbersCount = registrations.stream()
                 .filter(r -> r.getPhone() != null && !r.getPhone().trim().isEmpty())
@@ -222,5 +221,139 @@ public class AdminService {
         analytics.put("recentRegistrations", recentRegistrations.size());
         
         return analytics;
+    }
+
+    @Transactional(readOnly = true)
+    public Map<String, Object> getFilteredData(String searchTerm, String type, String eventName, 
+                                              LocalDateTime startDate, LocalDateTime endDate) {
+        logger.info("Admin: Filtering data with criteria - searchTerm: {}, type: {}, eventName: {}, startDate: {}, endDate: {}", 
+                   searchTerm, type, eventName, startDate, endDate);
+
+        Map<String, Object> result = new HashMap<>();
+        
+        // Get all data
+        List<ContactResponse> allContacts = getAllContacts();
+        List<RegistrationResponse> allRegistrations = getAllRegistrations();
+        
+        // Filter contacts
+        List<ContactResponse> filteredContacts = allContacts.stream()
+                .filter(contact -> {
+                    // Type filter
+                    if (type != null && !"all".equals(type) && "contact".equals(type)) {
+                        // Keep contacts when type is "contact"
+                    } else if (type != null && !"all".equals(type) && !"contact".equals(type)) {
+                        return false; // Exclude contacts when type is not "contact"
+                    }
+                    
+                    // Search term filter
+                    if (searchTerm != null && !searchTerm.trim().isEmpty()) {
+                        String lowerSearchTerm = searchTerm.toLowerCase();
+                        boolean matchesName = contact.getName() != null && contact.getName().toLowerCase().contains(lowerSearchTerm);
+                        boolean matchesEmail = contact.getEmail() != null && contact.getEmail().toLowerCase().contains(lowerSearchTerm);
+                        if (!matchesName && !matchesEmail) {
+                            return false;
+                        }
+                    }
+                    
+                    // Event/Subject filter
+                    if (eventName != null && !"all".equals(eventName)) {
+                        if (contact.getSubject() == null || !contact.getSubject().equals(eventName)) {
+                            return false;
+                        }
+                    }
+                    
+                    // Date range filter
+                    if (startDate != null || endDate != null) {
+                        LocalDateTime contactDate = contact.getSubmissionDate();
+                        if (contactDate == null) {
+                            return false;
+                        }
+                        
+                        if (startDate != null && contactDate.isBefore(startDate)) {
+                            return false;
+                        }
+                        
+                        if (endDate != null && contactDate.isAfter(endDate)) {
+                            return false;
+                        }
+                    }
+                    
+                    return true;
+                })
+                .collect(Collectors.toList());
+        
+        // Filter registrations
+        List<RegistrationResponse> filteredRegistrations = allRegistrations.stream()
+                .filter(registration -> {
+                    // Type filter
+                    if (type != null && !"all".equals(type) && "registration".equals(type)) {
+                        // Keep registrations when type is "registration"
+                    } else if (type != null && !"all".equals(type) && !"registration".equals(type)) {
+                        return false; // Exclude registrations when type is not "registration"
+                    }
+                    
+                    // Search term filter
+                    if (searchTerm != null && !searchTerm.trim().isEmpty()) {
+                        String lowerSearchTerm = searchTerm.toLowerCase();
+                        boolean matchesName = registration.getFullName() != null && registration.getFullName().toLowerCase().contains(lowerSearchTerm);
+                        boolean matchesEmail = registration.getEmail() != null && registration.getEmail().toLowerCase().contains(lowerSearchTerm);
+                        if (!matchesName && !matchesEmail) {
+                            return false;
+                        }
+                    }
+                    
+                    // Event filter
+                    if (eventName != null && !"all".equals(eventName)) {
+                        if (registration.getEventName() == null || !registration.getEventName().equals(eventName)) {
+                            return false;
+                        }
+                    }
+                    
+                    // Date range filter
+                    if (startDate != null || endDate != null) {
+                        LocalDateTime registrationDate = registration.getRegistrationDate();
+                        if (registrationDate == null) {
+                            return false;
+                        }
+                        
+                        if (startDate != null && registrationDate.isBefore(startDate)) {
+                            return false;
+                        }
+                        
+                        if (endDate != null && registrationDate.isAfter(endDate)) {
+                            return false;
+                        }
+                    }
+                    
+                    return true;
+                })
+                .collect(Collectors.toList());
+        
+        // Combine results
+        result.put("contacts", filteredContacts);
+        result.put("registrations", filteredRegistrations);
+        result.put("totalContacts", filteredContacts.size());
+        result.put("totalRegistrations", filteredRegistrations.size());
+        result.put("totalResults", filteredContacts.size() + filteredRegistrations.size());
+        
+        // Get unique emails for the copy feature
+        Set<String> uniqueEmails = new HashSet<>();
+        filteredContacts.forEach(c -> {
+            if (c.getEmail() != null && !c.getEmail().trim().isEmpty()) {
+                uniqueEmails.add(c.getEmail());
+            }
+        });
+        filteredRegistrations.forEach(r -> {
+            if (r.getEmail() != null && !r.getEmail().trim().isEmpty()) {
+                uniqueEmails.add(r.getEmail());
+            }
+        });
+        result.put("uniqueEmails", uniqueEmails.size());
+        result.put("emailList", new ArrayList<>(uniqueEmails));
+        
+        logger.info("Admin: Filtered data - {} contacts, {} registrations, {} unique emails", 
+                   filteredContacts.size(), filteredRegistrations.size(), uniqueEmails.size());
+        
+        return result;
     }
 }

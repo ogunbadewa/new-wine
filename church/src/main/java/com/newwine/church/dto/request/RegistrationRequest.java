@@ -4,6 +4,8 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
+import java.time.LocalDateTime;
+
 public class RegistrationRequest {
 
     @NotBlank(message = "Full name is required")
@@ -15,11 +17,8 @@ public class RegistrationRequest {
     @Size(max = 255, message = "Email must not exceed 255 characters")
     private String email;
 
-    @Size(max = 20, message = "Phone must not exceed 20 characters")
+    @Size(max = 20, message = "Phone number must not exceed 20 characters")
     private String phone;
-
-    @Size(max = 200, message = "Emergency contact must not exceed 200 characters")
-    private String emergencyContact;
 
     @NotBlank(message = "Event name is required")
     @Size(max = 100, message = "Event name must not exceed 100 characters")
@@ -28,19 +27,19 @@ public class RegistrationRequest {
     @Size(max = 1000, message = "Special requests must not exceed 1000 characters")
     private String specialRequests;
 
-    private String registrationDate;
+    private LocalDateTime registrationDate;
 
     // Constructors
     public RegistrationRequest() {}
 
-    public RegistrationRequest(String fullName, String email, String phone, String emergencyContact, 
-                              String eventName, String specialRequests) {
+    public RegistrationRequest(String fullName, String email, String phone, String eventName, 
+                              String specialRequests, LocalDateTime registrationDate) {
         this.fullName = fullName;
         this.email = email;
         this.phone = phone;
-        this.emergencyContact = emergencyContact;
         this.eventName = eventName;
         this.specialRequests = specialRequests;
+        this.registrationDate = registrationDate;
     }
 
     // Getters and Setters
@@ -68,14 +67,6 @@ public class RegistrationRequest {
         this.phone = phone;
     }
 
-    public String getEmergencyContact() {
-        return emergencyContact;
-    }
-
-    public void setEmergencyContact(String emergencyContact) {
-        this.emergencyContact = emergencyContact;
-    }
-
     public String getEventName() {
         return eventName;
     }
@@ -92,11 +83,11 @@ public class RegistrationRequest {
         this.specialRequests = specialRequests;
     }
 
-    public String getRegistrationDate() {
+    public LocalDateTime getRegistrationDate() {
         return registrationDate;
     }
 
-    public void setRegistrationDate(String registrationDate) {
+    public void setRegistrationDate(LocalDateTime registrationDate) {
         this.registrationDate = registrationDate;
     }
 
@@ -106,10 +97,9 @@ public class RegistrationRequest {
                 "fullName='" + fullName + '\'' +
                 ", email='" + email + '\'' +
                 ", phone='" + phone + '\'' +
-                ", emergencyContact='" + emergencyContact + '\'' +
                 ", eventName='" + eventName + '\'' +
                 ", specialRequests='" + specialRequests + '\'' +
-                ", registrationDate='" + registrationDate + '\'' +
+                ", registrationDate=" + registrationDate +
                 '}';
     }
 }

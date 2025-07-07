@@ -9,6 +9,7 @@ import com.newwine.church.service.ExportService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -119,6 +120,43 @@ public class AdminController {
             
             ApiResponse<List<RegistrationResponse>> response = ApiResponse.error(
                 "Error fetching registrations for event", 
+                e.getMessage()
+            );
+            
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    /**
+     * Get filtered data with multiple criteria
+     * PROTECTED ENDPOINT - Requires admin authentication
+     */
+    @GetMapping("/data/search")
+    public ResponseEntity<ApiResponse<Map<String, Object>>> getFilteredData(
+            @RequestParam(required = false) String searchTerm,
+            @RequestParam(required = false) String type,
+            @RequestParam(required = false) String eventName,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
+        
+        logger.info("Admin: Searching data with criteria - searchTerm: {}, type: {}, eventName: {}, startDate: {}, endDate: {}", 
+                   searchTerm, type, eventName, startDate, endDate);
+        
+        try {
+            Map<String, Object> result = adminService.getFilteredData(searchTerm, type, eventName, startDate, endDate);
+            
+            ApiResponse<Map<String, Object>> response = ApiResponse.success(
+                "Filtered data retrieved successfully", 
+                result
+            );
+            
+            return ResponseEntity.ok(response);
+            
+        } catch (Exception e) {
+            logger.error("Admin: Error fetching filtered data", e);
+            
+            ApiResponse<Map<String, Object>> response = ApiResponse.error(
+                "Error fetching filtered data", 
                 e.getMessage()
             );
             
@@ -301,66 +339,6 @@ public class AdminController {
             
             ApiResponse<StatsResponse> response = ApiResponse.error(
                 "Error fetching statistics", 
-                e.getMessage()
-            );
-            
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-        }
-    }
-
-    /**
-     * Search contacts
-     * PROTECTED ENDPOINT - Requires admin authentication
-     */
-    @GetMapping("/contacts/search")
-    public ResponseEntity<ApiResponse<List<ContactResponse>>> searchContacts(@RequestParam String query) {
-        logger.info("Admin: Searching contacts with query: {}", query);
-        
-        try {
-            List<ContactResponse> contacts = adminService.searchContacts(query);
-            
-            ApiResponse<List<ContactResponse>> response = ApiResponse.success(
-                "Search results retrieved successfully", 
-                contacts
-            );
-            
-            return ResponseEntity.ok(response);
-            
-        } catch (Exception e) {
-            logger.error("Admin: Error searching contacts", e);
-            
-            ApiResponse<List<ContactResponse>> response = ApiResponse.error(
-                "Error searching contacts", 
-                e.getMessage()
-            );
-            
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-        }
-    }
-
-    /**
-     * Search registrations
-     * PROTECTED ENDPOINT - Requires admin authentication
-     */
-    @GetMapping("/registrations/search")
-    public ResponseEntity<ApiResponse<List<RegistrationResponse>>> searchRegistrations(@RequestParam String query) {
-        logger.info("Admin: Searching registrations with query: {}", query);
-        
-        try {
-            List<RegistrationResponse> registrations = adminService.searchRegistrations(query);
-            
-            ApiResponse<List<RegistrationResponse>> response = ApiResponse.success(
-                "Search results retrieved successfully", 
-                registrations
-            );
-            
-            return ResponseEntity.ok(response);
-            
-        } catch (Exception e) {
-            logger.error("Admin: Error searching registrations", e);
-            
-            ApiResponse<List<RegistrationResponse>> response = ApiResponse.error(
-                "Error searching registrations", 
                 e.getMessage()
             );
             

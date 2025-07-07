@@ -75,7 +75,6 @@ public class ExportService {
                     registration.getEmail(),
                     registration.getPhone() != null ? registration.getPhone() : "",
                     registration.getEventName() != null ? registration.getEventName() : "",
-                    registration.getEmergencyContact() != null ? registration.getEmergencyContact() : "",
                     registration.getSpecialRequests() != null ? registration.getSpecialRequests() : "",
                     "Website", // Default source for registrations
                     "Event Registration", // Default request type for registrations
@@ -163,7 +162,6 @@ public class ExportService {
                     registration.getEmail(),
                     registration.getPhone() != null ? registration.getPhone() : "",
                     registration.getEventName() != null ? registration.getEventName() : "",
-                    registration.getEmergencyContact() != null ? registration.getEmergencyContact() : "",
                     registration.getSpecialRequests() != null ? registration.getSpecialRequests() : "",
                     registration.getRegistrationDate() != null ? registration.getRegistrationDate().format(DATE_FORMATTER) : "",
                     registration.getUpdatedAt() != null ? registration.getUpdatedAt().format(DATE_FORMATTER) : ""
@@ -205,7 +203,6 @@ public class ExportService {
                     registration.getEmail(),
                     registration.getPhone() != null ? registration.getPhone() : "",
                     registration.getEventName() != null ? registration.getEventName() : "",
-                    registration.getEmergencyContact() != null ? registration.getEmergencyContact() : "",
                     registration.getSpecialRequests() != null ? registration.getSpecialRequests() : "",
                     registration.getRegistrationDate() != null ? registration.getRegistrationDate().format(DATE_FORMATTER) : "",
                     registration.getUpdatedAt() != null ? registration.getUpdatedAt().format(DATE_FORMATTER) : ""
