@@ -1,13 +1,13 @@
 /* NEW HERE PAGE SPECIFIC STYLES */
 
-/* New Here Hero Section */
+/* New Here Hero Section with Custom Background */
 .new-here-hero {
     position: relative;
     height: 80vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(rgba(40, 40, 40, 0.6), rgba(40, 40, 40, 0.4)), var(--hero-image);
+    background: linear-gradient(rgba(40, 40, 40, 0.6), rgba(40, 40, 40, 0.4)), url('/media/images/new_here_background.jpg');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
@@ -50,75 +50,7 @@
     flex-wrap: wrap;
 }
 
-/* Welcome Steps */
-.welcome-steps {
-    padding: 6rem 2rem;
-    background: var(--white);
-}
-
-.steps-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 3rem;
-    max-width: 1200px;
-    margin: 4rem auto 0;
-}
-
-.step-card {
-    text-align: center;
-    padding: 3rem 2rem;
-    background: var(--lightest-gray);
-    border-radius: 12px;
-    position: relative;
-    transition: transform 0.3s ease;
-}
-
-.step-card:hover {
-    transform: translateY(-5px);
-}
-
-.step-number {
-    position: absolute;
-    top: -1.5rem;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 3rem;
-    height: 3rem;
-    background: var(--brand-blue);
-    color: var(--white);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 800;
-    font-size: 1.2rem;
-}
-
-.step-card:nth-child(2) .step-number { background: var(--for-the-nations); }
-.step-card:nth-child(3) .step-number { background: var(--counseling); }
-
-.step-icon {
-    font-size: 3rem;
-    margin: 2rem 0 1.5rem;
-    color: var(--brand-blue);
-}
-
-.step-card:nth-child(2) .step-icon { color: var(--for-the-nations); }
-.step-card:nth-child(3) .step-icon { color: var(--counseling); }
-
-.step-title {
-    font-size: 1.4rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-    color: var(--dark);
-}
-
-.step-description {
-    color: var(--body);
-    line-height: 1.6;
-}
-
-/* What to Expect */
+/* What to Expect - Updated Grid Layout */
 .what-to-expect {
     background: var(--lightest-gray);
     padding: 6rem 2rem;
@@ -126,10 +58,16 @@
 
 .expect-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: 2rem;
     max-width: 1000px;
     margin: 4rem auto 0;
+}
+
+/* Center the 4th card */
+.expect-grid .expect-item:nth-child(4) {
+    grid-column: 2 / 3;
+    grid-row: 2;
 }
 
 .expect-item {
@@ -339,13 +277,15 @@
         align-items: center;
     }
 
-    .steps-grid {
+    .expect-grid {
         grid-template-columns: 1fr;
         gap: 2rem;
     }
 
-    .expect-grid {
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    /* Reset grid positioning for mobile */
+    .expect-grid .expect-item:nth-child(4) {
+        grid-column: 1;
+        grid-row: auto;
     }
 
     .cta-title {
@@ -361,10 +301,23 @@
         grid-template-columns: 1fr;
     }
 
-    .welcome-steps,
     .what-to-expect,
     .faq-section,
     .new-here-cta {
         padding: 4rem 1rem;
+    }
+}
+
+/* Tablet responsive - 2x2 grid for expect cards */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .expect-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+    }
+    
+    /* Reset grid positioning for tablet */
+    .expect-grid .expect-item:nth-child(4) {
+        grid-column: auto;
+        grid-row: auto;
     }
 }

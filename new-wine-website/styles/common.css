@@ -4,7 +4,7 @@
 /* EASY MEDIA CONFIGURATION - Change these paths to update backgrounds */
 :root {
     --hero-video: url('/media/videos/hero-background.mp4');
-    --hero-image: url('/media/images/hero-background.jpg');
+    --hero-image: url('/media/images/new_here_background.jpg');
     --community-video: url('/media/videos/community_background.mp4');
     --community-image: url('/media/images/community_background.jpg');
     --events-video: url('/media/videos/events_background.mp4');

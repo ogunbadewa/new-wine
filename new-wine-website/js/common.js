@@ -71,7 +71,10 @@ function updateBimonthlyServiceDisplay() {
     const day = centralDate.getDate();
     const year = centralDate.getFullYear();
     
-    // Update date box elements if they exist
+    // Build formatted text once
+    const dateTimeText = `Next Service: ${fullMonthNames[month]} ${day}, ${year} • 5:30 PM`;
+    
+    // Update EVENTS page elements if they exist
     const monthEl = document.getElementById('bimonthlyMonth');
     const dayEl = document.getElementById('bimonthlyDay');
     const dateTimeEl = document.getElementById('bimonthlyDateTime');
@@ -82,12 +85,18 @@ function updateBimonthlyServiceDisplay() {
     }
     
     if (dateTimeEl) {
-        const dateTimeText = `Next Service: ${fullMonthNames[month]} ${day}, ${year} • 5:30 PM`;
         dateTimeEl.textContent = dateTimeText;
+    }
+
+    // ✅ NEW: Also update CONTACT page element if it exists
+    const contactDateTimeEl = document.getElementById('contactBimonthlyDateTime');
+    if (contactDateTimeEl) {
+        contactDateTimeEl.textContent = dateTimeText;
     }
 
     return nextService;
 }
+
 
 // FIXED: Enhanced image loading function with better error handling
 async function loadImmerseImages() {
