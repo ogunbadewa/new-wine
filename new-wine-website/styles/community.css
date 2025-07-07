@@ -42,69 +42,27 @@
     color: var(--white-paragraph);
 }
 
-/* Community Features Grid */
-.community-features {
-    background: var(--lightest-gray);
-    padding: 6rem 2rem;
+/* Community Connection Section */
+.community-connection {
+    position: relative;
+    height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(rgba(40, 40, 40, 0.7), rgba(40, 40, 40, 0.5)), url('/media/images/community-people.jpg');
+    background-size: cover;
+    background-position: center top;
+    background-attachment: fixed;
+    overflow: hidden;
 }
 
-.features-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 3rem;
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-.feature-card {
-    background: var(--white);
-    padding: 3rem;
+.community-connection-content {
     text-align: center;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-    transition: all 0.3s ease;
-    border-left: 4px solid var(--brand-blue);
-}
-
-.feature-card:nth-child(2) { border-left-color: var(--for-the-nations); }
-.feature-card:nth-child(3) { border-left-color: var(--counseling); }
-.feature-card:nth-child(4) { border-left-color: var(--creative); }
-.feature-card:nth-child(5) { border-left-color: var(--institute); }
-.feature-card:nth-child(6) { border-left-color: var(--for-the-city); }
-
-.feature-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-}
-
-.feature-icon {
-    font-size: 3rem;
-    margin-bottom: 1.5rem;
-    color: var(--brand-blue);
-}
-
-.feature-card:nth-child(2) .feature-icon { color: var(--for-the-nations); }
-.feature-card:nth-child(3) .feature-icon { color: var(--counseling); }
-.feature-card:nth-child(4) .feature-icon { color: var(--creative); }
-.feature-card:nth-child(5) .feature-icon { color: var(--institute); }
-.feature-card:nth-child(6) .feature-icon { color: var(--for-the-city); }
-
-.feature-title {
-    font-size: 1.4rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-    color: var(--dark);
-}
-
-.feature-description {
-    color: var(--body);
-    line-height: 1.6;
-    margin-bottom: 1.5rem;
-}
-
-.feature-details {
-    font-size: 0.9rem;
-    color: var(--dark-medium);
-    font-weight: 500;
+    color: var(--white);
+    max-width: 800px;
+    padding: 0 2rem;
+    z-index: 1;
+    position: relative;
 }
 
 /* Testimonials Section */
@@ -147,14 +105,10 @@
     margin-top: 1rem;
 }
 
-.testimonial-author {
-    font-weight: 600;
-    color: var(--dark);
-}
-
 .testimonial-role {
     font-size: 0.9rem;
     color: var(--body);
+    font-weight: 600;
 }
 
 /* Mobile Responsive for Community */
@@ -168,12 +122,17 @@
         font-size: 2.5rem;
     }
 
-    .features-grid {
+    .community-connection {
+        height: 40vh;
+        background-attachment: scroll;
+    }
+
+    .testimonials-grid {
         grid-template-columns: 1fr;
         gap: 2rem;
     }
 
-    .community-features {
+    .testimonials-section {
         padding: 4rem 1rem;
     }
 }

@@ -5,8 +5,8 @@
 :root {
     --hero-video: url('/media/videos/hero-background.mp4');
     --hero-image: url('/media/images/hero-background.jpg');
-    --community-video: url('/media/videos/community-background.mp4');
-    --community-image: url('/media/images/community-background.jpg');
+    --community-video: url('/media/videos/community_background.mp4');
+    --community-image: url('/media/images/community_background.jpg');
     --events-video: url('/media/videos/events-background.mp4');
     --events-image: url('/media/images/events-background.jpg');
     --contact-video: url('/media/videos/contact-background.mp4');
@@ -188,6 +188,22 @@ body {
     grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
     gap: 2rem;
     margin-top: 4rem;
+}
+
+/* Special layout for 4 cards - 3 on top, 1 centered below */
+.cards-grid.four-card-layout {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-top: 4rem;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.cards-grid.four-card-layout .card:nth-child(4) {
+    grid-column: 2 / 3;
+    grid-row: 2;
 }
 
 .card {
@@ -568,9 +584,15 @@ body {
         padding: 4rem 1rem;
     }
 
-    .cards-grid {
+    .cards-grid,
+    .cards-grid.four-card-layout {
         grid-template-columns: 1fr;
         gap: 2rem;
+    }
+    
+    .cards-grid.four-card-layout .card:nth-child(4) {
+        grid-column: 1;
+        grid-row: auto;
     }
 
     .section-title {
@@ -590,5 +612,18 @@ body {
     
     .card:hover .card-icon {
         transform: scale(1.05);
+    }
+}
+
+/* Tablet responsive - 2x2 grid for 4 cards */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .cards-grid.four-card-layout {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+    }
+    
+    .cards-grid.four-card-layout .card:nth-child(4) {
+        grid-column: auto;
+        grid-row: auto;
     }
 }
