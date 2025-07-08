@@ -18,4 +18,4 @@ RUN ./mvnw clean package -DskipTests
 
 # Run the application
 EXPOSE 8080
-CMD ["java", "-jar", "target/*.jar"]
+CMD ["sh", "-c", "java -jar target/*.jar"]
