@@ -249,23 +249,50 @@
     <script src="js/api.js"></script>
     <script>
         // FIXED: Proper slideshow initialization
+        // REPLACE YOUR EXISTING initializeEventsSlideshow function in events.html with this:
+
+// Enhanced slideshow loading for Safari
         async function initializeEventsSlideshow() {
             console.log('🎬 Initializing Events Slideshow...');
             
             try {
-                // Use the loadImmerseImages function from common.js
+                // Detect Safari
+                const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+                
                 if (window.NewWineSlideshow && window.NewWineSlideshow.loadImmerseImages) {
                     const imageCount = await window.NewWineSlideshow.loadImmerseImages();
                     console.log(`📸 Loaded ${imageCount} IMMERSE 2024 images`);
                     
                     if (imageCount > 0) {
-                        // Initialize slideshow controls
                         window.slideIndex = 1;
                         window.totalSlides = imageCount;
                         
-                        // Start the slideshow
                         if (window.NewWineSlideshow.initializeSlideshow) {
                             window.NewWineSlideshow.initializeSlideshow();
+                        }
+                        
+                        // Safari-specific fixes after images load
+                        if (isSafari) {
+                            setTimeout(() => {
+                                // Call the fixSafariImages function from common.js
+                                if (window.NewWineSlideshow.fixSafariImages) {
+                                    window.NewWineSlideshow.fixSafariImages();
+                                }
+                                
+                                // Force container recalculation
+                                const slidesTrack = document.getElementById('slidesTrack');
+                                if (slidesTrack) {
+                                    slidesTrack.style.width = '100%';
+                                    slidesTrack.style.height = '800px';
+                                    slidesTrack.offsetHeight; // Force redraw
+                                }
+                                
+                                const slideshowWrapper = document.querySelector('.slideshow-wrapper');
+                                if (slideshowWrapper) {
+                                    slideshowWrapper.style.width = '100%';
+                                    slideshowWrapper.offsetHeight; // Force redraw
+                                }
+                            }, 100);
                         }
                         
                         console.log('✅ Slideshow initialized successfully!');
@@ -415,6 +442,9 @@
         });
 
         // Initialize when page loads
+        // REPLACE YOUR EXISTING DOMContentLoaded event listener at the bottom of events.html with this:
+
+        // Initialize when page loads - Enhanced with Safari fixes
         document.addEventListener('DOMContentLoaded', function() {
             console.log('🚀 Events page DOM loaded');
             
@@ -424,10 +454,41 @@
                 console.log('📅 Bi-monthly service dates updated');
             }
             
-            // Initialize slideshow with proper error handling
+            // Detect Safari and apply immediate fixes
+            const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+            if (isSafari) {
+                console.log('🦁 Safari detected - applying compatibility fixes');
+                
+                // Immediate Safari fixes
+                setTimeout(() => {
+                    // Fix grid layout
+                    const heroContent = document.querySelector('.immerse-hero-content');
+                    if (heroContent) {
+                        heroContent.style.display = 'grid';
+                        heroContent.style.gridTemplateColumns = 'minmax(0, 1fr) 550px';
+                        heroContent.offsetHeight; // Force redraw
+                    }
+                    
+                    // Fix flyer container
+                    const flyerContainer = document.querySelector('.immerse-hero-flyer');
+                    if (flyerContainer) {
+                        flyerContainer.style.width = '550px';
+                        flyerContainer.style.minWidth = '550px';
+                        flyerContainer.style.flexShrink = '0';
+                        flyerContainer.offsetHeight; // Force redraw
+                    }
+                    
+                    // Call Safari image fixes if available
+                    if (window.NewWineSlideshow && window.NewWineSlideshow.fixSafariImages) {
+                        window.NewWineSlideshow.fixSafariImages();
+                    }
+                }, 50);
+            }
+            
+            // Initialize slideshow with delay
             setTimeout(() => {
                 initializeEventsSlideshow();
-            }, 500); // Small delay to ensure common.js is fully loaded
+            }, 500);
         });
     </script>
 </body>

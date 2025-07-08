@@ -42,10 +42,10 @@
 .immerse-hero-content {
     position: relative;
     z-index: 1;
-    max-width: 1400px;
+    max-width: 1600px;
     margin: 0 auto;
     display: grid;
-    grid-template-columns: 1fr 400px;
+    grid-template-columns: 1fr 550px;
     gap: 4rem;
     align-items: center;
 }
@@ -207,15 +207,23 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    min-width: 0; /* Safari grid fix */
+    width: 100%;
 }
 
 .flyer-image {
-    max-width: 100%;
+    width: 500px; /* Fixed width instead of percentage for Safari */
+    max-width: 500px;
     height: auto;
     border-radius: 20px;
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
     transition: transform 0.3s ease;
     animation: floatFlyer 6s ease-in-out infinite;
+    flex-shrink: 0; /* Prevent Safari from shrinking the image */
+    
+    /* Safari-specific fixes */
+    -webkit-transform: translateZ(0); /* Force hardware acceleration */
+    transform: translateZ(0);
 }
 
 @keyframes floatFlyer {
@@ -323,7 +331,7 @@
 /* IMMERSE 2024 Memories Section - UPDATED FOR LARGER IMAGES */
 .immerse-memories {
     background: var(--lightest-gray);
-    padding: 6rem 2rem;
+    padding: 4rem 1rem;
 }
 
 .memories-content {
@@ -343,7 +351,7 @@
 .memories-subtitle {
     font-size: 1.2rem;
     color: var(--body);
-    margin-bottom: 4rem;
+    margin-bottom: 2rem;
     max-width: 600px;
     margin-left: auto;
     margin-right: auto;
@@ -351,8 +359,9 @@
 
 /* Slideshow Styles - UPDATED FOR LARGER IMAGES */
 .slideshow-container {
-    max-width: 1200px; /* Increased from 900px */
+    max-width: 1600px;
     margin: 0 auto;
+    width: 100%;
 }
 
 .slideshow-wrapper {
@@ -367,7 +376,7 @@
 .slides-track {
     position: relative;
     width: 100%;
-    height: 700px; /* Increased from 500px */
+    height: 800px;
 }
 
 .slide {
@@ -860,6 +869,11 @@
         grid-template-columns: 1fr;
         gap: 2rem;
         text-align: center;
+        max-width: 100%;
+    }
+
+    .flyer-image {
+        max-width: 400px;
     }
 
     .immerse-title {
@@ -889,11 +903,11 @@
     }
 
     .slideshow-wrapper {
-        margin: 0 1rem;
+        margin: 0 0.5rem;
     }
 
     .slides-track {
-        height: 400px; /* Increased from 300px for mobile too */
+        height: 500px;
     }
 
     .memories-title {
@@ -943,5 +957,174 @@
     .event-location, .event-contact {
         justify-content: center;
         font-size: 0.9rem;
+    }
+}
+
+/* ADD THESE SAFARI-SPECIFIC FIXES TO YOUR events.css */
+
+/* 1. Fix the grid layout for Safari */
+.immerse-hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 1600px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 550px; /* Changed from 1fr to minmax(0, 1fr) */
+    gap: 4rem;
+    align-items: center;
+    
+    /* Safari-specific grid fixes */
+    -webkit-grid-template-columns: minmax(0, 1fr) 550px;
+}
+
+/* 2. Fix the flyer container for Safari */
+.immerse-hero-flyer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 550px; /* Add explicit min-width */
+    width: 550px; /* Add explicit width */
+    min-height: 0; /* Safari grid fix */
+    
+    /* Safari-specific flexbox fixes */
+    -webkit-flex-shrink: 0;
+    flex-shrink: 0;
+    -webkit-flex-grow: 0;
+    flex-grow: 0;
+}
+
+/* 3. Enhanced flyer image styling for Safari */
+.flyer-image {
+    width: 500px !important; /* Force the width */
+    min-width: 500px; /* Prevent shrinking */
+    max-width: 500px;
+    height: auto;
+    border-radius: 20px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease;
+    animation: floatFlyer 6s ease-in-out infinite;
+    
+    /* Enhanced Safari fixes */
+    -webkit-flex-shrink: 0;
+    flex-shrink: 0;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    
+    /* Force proper rendering */
+    display: block;
+    object-fit: contain; /* Changed from cover to contain for better Safari support */
+}
+
+/* 4. Fix slideshow container for Safari */
+.slideshow-container {
+    max-width: 1600px;
+    margin: 0 auto;
+    width: 100%;
+    
+    /* Safari-specific fixes */
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+}
+
+.slideshow-wrapper {
+    position: relative;
+    background: var(--white);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+    
+    /* Safari-specific container fixes */
+    width: 100%;
+    min-height: 800px;
+}
+
+.slides-track {
+    position: relative;
+    width: 100% !important; /* Force full width */
+    height: 800px;
+    
+    /* Safari-specific fixes */
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    overflow: hidden;
+}
+
+/* 5. Enhanced slide image styling for Safari */
+.slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100% !important; /* Force full width */
+    height: 100% !important; /* Force full height */
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+    
+    /* Safari-specific fixes */
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+}
+
+.slide img {
+    width: 100% !important; /* Force full width */
+    height: 100% !important; /* Force full height */
+    min-width: 100%;
+    min-height: 100%;
+    object-fit: cover;
+    display: block;
+    
+    /* Safari-specific image fixes */
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+/* 6. Safari-specific mobile responsive fixes */
+@media (max-width: 768px) {
+    .immerse-hero-content {
+        grid-template-columns: 1fr; /* Single column on mobile */
+        -webkit-grid-template-columns: 1fr;
+        gap: 2rem;
+        text-align: center;
+        max-width: 100%;
+    }
+
+    .immerse-hero-flyer {
+        min-width: auto;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .flyer-image {
+        width: 350px !important;
+        min-width: 350px;
+        max-width: 90vw; /* Responsive to viewport */
+    }
+
+    .slides-track {
+        height: 500px;
+    }
+}
+
+/* 7. Additional Safari-specific fixes */
+@supports (-webkit-appearance: none) {
+    /* These styles only apply to Safari */
+    
+    .immerse-hero-content {
+        display: -webkit-grid;
+        -webkit-grid-template-columns: minmax(0, 1fr) 550px;
+    }
+    
+    .flyer-image {
+        -webkit-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0);
+    }
+    
+    .slide img {
+        -webkit-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0);
     }
 }

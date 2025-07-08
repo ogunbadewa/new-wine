@@ -342,6 +342,34 @@ function resetAutoSlide() {
     }
 }
 
+function fixSafariImages() {
+    // Fix flyer image
+    const flyerImage = document.querySelector('.flyer-image');
+    if (flyerImage) {
+        // Force Safari to recalculate image dimensions
+        flyerImage.style.width = '500px';
+        flyerImage.style.minWidth = '500px';
+        flyerImage.style.maxWidth = '500px';
+        flyerImage.style.height = 'auto';
+        flyerImage.style.display = 'block';
+        
+        // Force redraw
+        flyerImage.offsetHeight;
+    }
+    
+    // Fix slideshow images
+    const slideImages = document.querySelectorAll('.slide img');
+    slideImages.forEach(img => {
+        img.style.width = '100%';
+        img.style.height = '100%';
+        img.style.objectFit = 'cover';
+        img.style.display = 'block';
+        
+        // Force redraw
+        img.offsetHeight;
+    });
+}
+
 // Enhanced image loading with error handling
 function loadImageWithFallback(img, src, fallbackSrc = '/media/images/placeholder.jpg') {
     return new Promise((resolve, reject) => {
@@ -807,8 +835,23 @@ window.NewWineSlideshow = {
     loadImmerseImages,
     showSlide,
     autoSlide,
-    resetAutoSlide
+    resetAutoSlide,
+    fixSafariImages  // ADD THIS LINE
 };
+
+// ADD THIS NEW WINDOW RESIZE HANDLER after the export section:
+
+// Window resize handler for Safari
+window.addEventListener('resize', function() {
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    if (isSafari) {
+        setTimeout(() => {
+            if (window.NewWineSlideshow && window.NewWineSlideshow.fixSafariImages) {
+                window.NewWineSlideshow.fixSafariImages();
+            }
+        }, 100);
+    }
+});
 
 // Add CSS animations
 const style = document.createElement('style');
