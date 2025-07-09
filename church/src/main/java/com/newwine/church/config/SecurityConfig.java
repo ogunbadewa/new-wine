@@ -86,9 +86,11 @@ public class SecurityConfig {
             "http://localhost:3001",    // Alternative React port
             "http://localhost:8080",    // Same origin
             "http://127.0.0.1:8081",
-            "https://your-domain.com",  // Production domain
-            "https://www.your-domain.com" // Production www domain
+            "http://127.0.0.1:5500",    // Live Server
+            "https://new-wine-1.onrender.com",  // Production frontend
+            "https://new-wine.onrender.com"     // Backend URL (for any self-calls)
         ));
+    
         
         // Allow specific HTTP methods
         configuration.setAllowedMethods(Arrays.asList(

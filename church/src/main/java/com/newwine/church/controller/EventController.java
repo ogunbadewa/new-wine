@@ -14,7 +14,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/events")
-@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:8080", "http://127.0.0.1:5500"})
 public class EventController {
 
     private static final Logger logger = LoggerFactory.getLogger(EventController.class);
