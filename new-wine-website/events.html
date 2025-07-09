@@ -406,7 +406,7 @@
                     const result = await registerForEvent(registrationData);
                     
                     if (result.success) {
-                        alert(`Successfully registered for ${registrationData.eventName}! Check your email for confirmation.`);
+                        alert(`Successfully registered for ${registrationData.eventName}!`);
                         closeRegistrationModal();
                     } else {
                         throw new Error(result.message || 'Registration failed');
