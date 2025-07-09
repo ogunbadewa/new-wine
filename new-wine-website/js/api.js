@@ -2,8 +2,7 @@
 // All backend communication functions
 
 // Get API base URL from config
-const API_BASE_URL = window.NewWineConfig?.API_BASE_URL || 'http://localhost:8080/api';
-
+const API_BASE_URL = window.NewWineConfig?.API_BASE_URL || 'https://new-wine.onrender.com/api';
 // Generic API request function
 async function apiRequest(endpoint, options = {}) {
     const url = `${API_BASE_URL}${endpoint}`;

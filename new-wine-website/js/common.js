@@ -3,8 +3,8 @@
 
 // Configuration
 const CONFIG = {
-    API_BASE_URL: 'http://localhost:8080/api', // Change this for production
-    ENVIRONMENT: 'development' // 'development' or 'production'
+    API_BASE_URL: 'https://new-wine.onrender.com/api', // Change this for production
+    ENVIRONMENT: 'production' // 'development' or 'production'
 };
 
 // Slideshow functionality - UPDATED FOR DYNAMIC IMAGE LOADING
